@@ -36,12 +36,18 @@ export default function Home() {
               <div className="mb-6 flex items-center gap-5">
                 <div className="relative">
                   <div
-                    className={`h-20 w-20 rounded-full bg-linear-to-br from-purple-400 via-pink-400 to-orange-400 shadow-lg shadow-purple-500/30 ${
+                    className={`h-20 w-20 rounded-full overflow-hidden shadow-lg shadow-purple-500/30 ${
                       isMounted ? "animate-avatar-float" : ""
                     }`}
                     style={isMounted ? { animationDelay: "1s" } : {}}
-                  ></div>
-                  <div className="absolute inset-0 rounded-full bg-linear-to-br from-purple-400/20 to-pink-400/20 blur-xl"></div>
+                  >
+                    <img
+                      src="/profile.png"
+                      alt="hanetsuki"
+                      className="w-full h-full object-cover"
+                      style={{ imageRendering: "high-quality" }}
+                    />
+                  </div>
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
