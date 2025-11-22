@@ -45,7 +45,6 @@ export default function Home() {
                       src="/profile.png"
                       alt="hanetsuki"
                       className="w-full h-full object-cover"
-                      style={{ imageRendering: "high-quality" }}
                     />
                   </div>
                 </div>
