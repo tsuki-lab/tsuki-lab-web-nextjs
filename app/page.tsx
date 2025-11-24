@@ -236,7 +236,8 @@ export default function Home() {
               </div>
             </a>
 
-            <a
+            {/* しんぷるカウンター - 一時的に非表示 */}
+            {/* <a
               href="https://tsuki-lab.booth.pm/items/7660157"
               target="_blank"
               rel="noopener noreferrer"
@@ -264,6 +265,36 @@ export default function Home() {
                   </span>
                   <span>/</span>
                   <span>無料版あり</span>
+                </div>
+              </div>
+            </a> */}
+
+            <a
+              href="https://tsuki-lab.booth.pm/items/7684868"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`group relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white/80 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg dark:border-gray-800/50 dark:bg-gray-900/80 ${
+                isMounted ? "animate-card-entrance" : "opacity-0"
+              }`}
+              style={isMounted ? { animationDelay: "1.3s" } : {}}
+            >
+              <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-linear-to-br from-orange-400/20 to-pink-400/20 blur-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+              <div className="relative">
+                <div className="mb-3 flex items-start justify-between gap-2">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                    うごく！グラデーションカウンター
+                  </h3>
+                  <span className="text-xs opacity-60 transition-opacity duration-200 group-hover:opacity-100">
+                    ↗
+                  </span>
+                </div>
+                <p className="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  色を選ぶだけで自動生成されるグラデーションで、カウントを可愛く表示するカウンターツール
+                </p>
+                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                  <span className="font-semibold text-orange-600 dark:text-orange-400">
+                    ¥250
+                  </span>
                 </div>
               </div>
             </a>
