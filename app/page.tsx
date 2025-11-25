@@ -236,8 +236,7 @@ export default function Home() {
               </div>
             </a>
 
-            {/* しんぷるカウンター - 一時的に非表示 */}
-            {/* <a
+            <a
               href="https://tsuki-lab.booth.pm/items/7660157"
               target="_blank"
               rel="noopener noreferrer"
@@ -261,13 +260,11 @@ export default function Home() {
                 </p>
                 <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <span className="font-semibold text-orange-600 dark:text-orange-400">
-                    ¥250
+                    ¥200〜
                   </span>
-                  <span>/</span>
-                  <span>無料版あり</span>
                 </div>
               </div>
-            </a> */}
+            </a>
 
             <a
               href="https://tsuki-lab.booth.pm/items/7684868"
