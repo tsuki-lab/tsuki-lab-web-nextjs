@@ -100,18 +100,7 @@ export default function Home() {
               <h2 className="mb-5 text-lg font-bold text-gray-900 dark:text-white">
                 links
               </h2>
-              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-5">
-                <a
-                  href="https://twitter.com/hanetsuki_dev"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/link flex items-center justify-between rounded-xl bg-linear-to-r from-gray-50 to-gray-100/50 p-3.5 text-sm font-medium text-gray-900 transition-all duration-200 hover:scale-[1.02] hover:bg-linear-to-r hover:from-blue-50 hover:to-cyan-50 hover:shadow-md dark:from-gray-800 dark:to-gray-900 dark:text-gray-100 dark:hover:from-blue-950/30 dark:hover:to-cyan-950/30"
-                >
-                  <span>Twitter</span>
-                  <span className="text-xs opacity-60 transition-opacity duration-200 group-hover/link:opacity-100">
-                    ↗
-                  </span>
-                </a>
+              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
                 <a
                   href="https://github.com/tsuki-lab"
                   target="_blank"
@@ -173,7 +162,7 @@ export default function Home() {
           </h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <a
-              href="https://booth.pm/ja/items/6747525"
+              href="https://tsuki-lab.booth.pm/items/6747525"
               target="_blank"
               rel="noopener noreferrer"
               className={`group relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white/80 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg dark:border-gray-800/50 dark:bg-gray-900/80 ${
@@ -196,16 +185,14 @@ export default function Home() {
                 </p>
                 <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <span className="font-semibold text-orange-600 dark:text-orange-400">
-                    ¥500
+                    ¥860
                   </span>
-                  <span>/</span>
-                  <span>無料版あり</span>
                 </div>
               </div>
             </a>
 
             <a
-              href="https://tsuki-lab.booth.pm/items/6698509"
+              href="https://tsuki-lab.booth.pm/items/7831150"
               target="_blank"
               rel="noopener noreferrer"
               className={`group relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white/80 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg dark:border-gray-800/50 dark:bg-gray-900/80 ${
@@ -217,21 +204,49 @@ export default function Home() {
               <div className="relative">
                 <div className="mb-3 flex items-start justify-between gap-2">
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                    スーパーチャットビューア
+                    サンクスカードふり返りツール
                   </h3>
                   <span className="text-xs opacity-60 transition-opacity duration-200 group-hover:opacity-100">
                     ↗
                   </span>
                 </div>
                 <p className="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                  スーパーチャットを画面に残せるツール
+                  メンギフ・スパチャが後から確認できる！サンクスカード作成に便利なふり返りツール
                 </p>
                 <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <span className="font-semibold text-orange-600 dark:text-orange-400">
-                    ¥250
+                    ¥1,280
                   </span>
-                  <span>/</span>
-                  <span>無料版あり</span>
+                </div>
+              </div>
+            </a>
+
+            <a
+              href="https://tsuki-lab.booth.pm/items/7684868"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`group relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white/80 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg dark:border-gray-800/50 dark:bg-gray-900/80 ${
+                isMounted ? "animate-card-entrance" : "opacity-0"
+              }`}
+              style={isMounted ? { animationDelay: "1.2s" } : {}}
+            >
+              <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-linear-to-br from-orange-400/20 to-pink-400/20 blur-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+              <div className="relative">
+                <div className="mb-3 flex items-start justify-between gap-2">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                    グラデーションカウンター
+                  </h3>
+                  <span className="text-xs opacity-60 transition-opacity duration-200 group-hover:opacity-100">
+                    ↗
+                  </span>
+                </div>
+                <p className="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  カウントをグラデーションで可愛く表示するカウンターツール
+                </p>
+                <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                  <span className="font-semibold text-orange-600 dark:text-orange-400">
+                    ¥380
+                  </span>
                 </div>
               </div>
             </a>
@@ -243,7 +258,7 @@ export default function Home() {
               className={`group relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white/80 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg dark:border-gray-800/50 dark:bg-gray-900/80 ${
                 isMounted ? "animate-card-entrance" : "opacity-0"
               }`}
-              style={isMounted ? { animationDelay: "1.2s" } : {}}
+              style={isMounted ? { animationDelay: "1.3s" } : {}}
             >
               <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-linear-to-br from-orange-400/20 to-pink-400/20 blur-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
               <div className="relative">
@@ -267,30 +282,30 @@ export default function Home() {
             </a>
 
             <a
-              href="https://tsuki-lab.booth.pm/items/7684868"
+              href="https://tsuki-lab.booth.pm/items/6698509"
               target="_blank"
               rel="noopener noreferrer"
               className={`group relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white/80 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg dark:border-gray-800/50 dark:bg-gray-900/80 ${
                 isMounted ? "animate-card-entrance" : "opacity-0"
               }`}
-              style={isMounted ? { animationDelay: "1.3s" } : {}}
+              style={isMounted ? { animationDelay: "1.4s" } : {}}
             >
               <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-linear-to-br from-orange-400/20 to-pink-400/20 blur-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
               <div className="relative">
                 <div className="mb-3 flex items-start justify-between gap-2">
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                    うごく！グラデーションカウンター
+                    スーパーチャットビューア
                   </h3>
                   <span className="text-xs opacity-60 transition-opacity duration-200 group-hover:opacity-100">
                     ↗
                   </span>
                 </div>
                 <p className="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                  色を選ぶだけで自動生成されるグラデーションで、カウントを可愛く表示するカウンターツール
+                  スーパーチャットを画面に残せるツール
                 </p>
                 <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <span className="font-semibold text-orange-600 dark:text-orange-400">
-                    ¥250
+                    ¥500
                   </span>
                 </div>
               </div>

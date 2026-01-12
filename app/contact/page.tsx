@@ -103,7 +103,7 @@ export default function Contact() {
 
                 {/* Twitter */}
                 <a
-                  href="https://twitter.com/hanetsuki_dev"
+                  href="https://twitter.com/liscoresia"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`group/item block relative overflow-hidden rounded-2xl border border-blue-200/50 bg-linear-to-r from-blue-50 via-cyan-50 to-blue-50 p-6 shadow-md transition-all duration-200 hover:scale-[1.02] dark:border-blue-800/50 dark:from-blue-950/30 dark:via-cyan-950/30 dark:to-blue-950/30 ${
@@ -115,7 +115,7 @@ export default function Contact() {
                     Twitter
                   </div>
                   <div className="flex items-center justify-between text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    <span>@hanetsuki_dev</span>
+                    <span>@liscoresia</span>
                     <span className="opacity-0 transition-opacity duration-200 group-hover/item:opacity-100">
                       →
                     </span>
