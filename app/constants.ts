@@ -23,27 +23,21 @@ export const LINKS = [
 
 export const PRODUCTS = [
   {
-    name: "Totelo（トテロ）",
-    href: `${BOOTH_BASE_URL}/items/7888902`,
-    description: "高評価・同接・スパチャ額などを自動計算。見出しやレイアウトを自由に編集できる配信支援ツール（わんコメテンプレート）",
-    price: "¥2,800",
-  },
-  {
     name: "Roupit（ルーピット）",
     href: `${BOOTH_BASE_URL}/items/7958002`,
     description: "配信特化のルーレットツール。OBSで表示用画面と操作画面を分けて、企画や盛り上げに利用可能（無料版あり）",
     price: "¥1,000",
   },
   {
-    name: "Liscoresia",
-    href: `${BOOTH_BASE_URL}/items/6747525`,
-    description: "VTuber用エンドロール作成ツール",
-    price: "¥860",
+    name: "Totelo（トテロ）",
+    href: `${BOOTH_BASE_URL}/items/7888902`,
+    description: "高評価やあいさつ数、同接・スパチャ額などを自動計算。見出しやレイアウトを自由に編集できる配信支援ツール（わんコメテンプレート）",
+    price: "¥2,800",
   },
   {
     name: "サンクスカードふり返りツール",
     href: `${BOOTH_BASE_URL}/items/7831150`,
-    description: "メンギフ・スパチャが後から確認できる！サンクスカード作成に便利なふり返りツール（わんコメプラグイン）",
+    description: "メンギフ・スパチャ・スパステを後から確認できる、サンクスカード作成に便利なふり返りツール（わんコメプラグイン）",
     price: "¥1,900",
   },
   {
@@ -55,8 +49,14 @@ export const PRODUCTS = [
   {
     name: "しんぷるカウンター",
     href: `${BOOTH_BASE_URL}/items/7660157`,
-    description: "手動カウント＆初見コメント自動集計対応。自分好みのデザインにできるカウンターツール",
+    description: "手動カウント＆初見コメント自動集計対応。キーワード・高評価・同接など幅広く使えるカウンターツール",
     price: "¥280〜",
+  },
+  {
+    name: "Liscoresia（リスコレシア）",
+    href: `${BOOTH_BASE_URL}/items/6747525`,
+    description: "VTuber用エンドロール作成ツール（わんコメテンプレート）",
+    price: "¥860",
   },
   {
     name: "スーパーチャットビューア",
