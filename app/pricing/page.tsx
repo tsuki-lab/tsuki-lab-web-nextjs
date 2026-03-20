@@ -322,24 +322,31 @@ export default function Pricing() {
           <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
             オプション・カスタマイズ料金
           </h2>
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {OPTIONS_ITEMS.map((item, index) => (
-              <div
-                key={item.name}
-                className={`flex items-start gap-4 rounded-xl border border-gray-200/50 bg-white/60 p-4 dark:border-gray-800/50 dark:bg-gray-900/60 ${
-                  isMounted ? "animate-item-entrance" : "opacity-0"
-                }`}
-                style={isMounted ? { animationDelay: `${0.85 + index * 0.04}s` } : {}}
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="font-semibold text-gray-900 dark:text-white">{item.name}</div>
-                  <div className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{item.description}</div>
-                </div>
-                <span className="shrink-0 text-sm font-bold text-pink-600 dark:text-pink-400 whitespace-nowrap">
-                  {item.price}
-                </span>
-              </div>
-            ))}
+          <div className="overflow-hidden rounded-2xl border border-gray-200/50 bg-white/80 shadow-sm backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/80">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-gray-800">
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">項目</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 whitespace-nowrap">参考価格</th>
+                  <th className="hidden px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 sm:table-cell">内容</th>
+                </tr>
+              </thead>
+              <tbody>
+                {OPTIONS_ITEMS.map((item, index) => (
+                  <tr
+                    key={item.name}
+                    className={index < OPTIONS_ITEMS.length - 1 ? "border-b border-gray-100 dark:border-gray-800" : ""}
+                  >
+                    <td className="px-5 py-4 align-top">
+                      <div className="font-semibold text-gray-900 dark:text-white">{item.name}</div>
+                      <div className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400 sm:hidden">{item.description}</div>
+                    </td>
+                    <td className="px-5 py-4 align-top whitespace-nowrap font-bold text-pink-600 dark:text-pink-400">{item.price}</td>
+                    <td className="hidden px-5 py-4 align-top leading-relaxed text-gray-600 dark:text-gray-400 sm:table-cell">{item.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
 
