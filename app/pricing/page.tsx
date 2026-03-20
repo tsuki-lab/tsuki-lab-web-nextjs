@@ -233,28 +233,31 @@ export default function Pricing() {
           <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
             制作メニュー・参考価格
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {MENU_ITEMS.map((item, index) => (
-              <div
-                key={item.name}
-                className={`group relative overflow-hidden rounded-2xl border bg-linear-to-r p-5 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-md ${item.color} ${item.border} ${
-                  isMounted ? "animate-card-entrance" : "opacity-0"
-                }`}
-                style={isMounted ? { animationDelay: `${0.35 + index * 0.05}s` } : {}}
-              >
-                <div className="mb-3 flex items-start justify-between gap-2">
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white leading-snug">
-                    {item.name}
-                  </h3>
-                  <span className={`shrink-0 text-lg font-bold ${item.priceColor}`}>
-                    {item.price}
-                  </span>
-                </div>
-                <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                  {item.description}
-                </p>
-              </div>
-            ))}
+          <div className="overflow-hidden rounded-2xl border border-gray-200/50 bg-white/80 shadow-sm backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/80">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-gray-800">
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">カテゴリ</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 whitespace-nowrap">参考価格</th>
+                  <th className="hidden px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 sm:table-cell">概要</th>
+                </tr>
+              </thead>
+              <tbody>
+                {MENU_ITEMS.map((item, index) => (
+                  <tr
+                    key={item.name}
+                    className={index < MENU_ITEMS.length - 1 ? "border-b border-gray-100 dark:border-gray-800" : ""}
+                  >
+                    <td className="px-5 py-4 align-top">
+                      <div className="font-semibold text-gray-900 dark:text-white">{item.name}</div>
+                      <div className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400 sm:hidden">{item.description}</div>
+                    </td>
+                    <td className="px-5 py-4 align-top whitespace-nowrap font-bold text-purple-600 dark:text-purple-400">{item.price}</td>
+                    <td className="hidden px-5 py-4 align-top leading-relaxed text-gray-600 dark:text-gray-400 sm:table-cell">{item.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </section>
 
@@ -273,24 +276,30 @@ export default function Pricing() {
             既存ツールをベースに、あなたの配信スタイルに合わせてカスタマイズします。
           </p>
           <div className="overflow-hidden rounded-2xl border border-gray-200/50 bg-white/80 shadow-sm backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/80">
-            {CUSTOMIZE_ITEMS.map((item, index) => (
-              <div
-                key={item.name}
-                className={`flex flex-col gap-1 p-5 sm:flex-row sm:items-center sm:gap-4 ${
-                  index < CUSTOMIZE_ITEMS.length - 1
-                    ? "border-b border-gray-100 dark:border-gray-800"
-                    : ""
-                }`}
-              >
-                <div className="min-w-0 flex-1">
-                  <div className="font-semibold text-gray-900 dark:text-white">{item.name}</div>
-                  <div className="mt-0.5 text-sm text-gray-500 dark:text-gray-400">{item.examples}</div>
-                </div>
-                <span className="shrink-0 text-base font-bold text-orange-600 dark:text-orange-400">
-                  {item.price}
-                </span>
-              </div>
-            ))}
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-gray-800">
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">対象ツール</th>
+                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 whitespace-nowrap">参考価格</th>
+                  <th className="hidden px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 sm:table-cell">カスタム例</th>
+                </tr>
+              </thead>
+              <tbody>
+                {CUSTOMIZE_ITEMS.map((item, index) => (
+                  <tr
+                    key={item.name}
+                    className={index < CUSTOMIZE_ITEMS.length - 1 ? "border-b border-gray-100 dark:border-gray-800" : ""}
+                  >
+                    <td className="px-5 py-4 align-top">
+                      <div className="font-semibold text-gray-900 dark:text-white">{item.name}</div>
+                      <div className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400 sm:hidden">{item.examples}</div>
+                    </td>
+                    <td className="px-5 py-4 align-top whitespace-nowrap font-bold text-orange-600 dark:text-orange-400">{item.price}</td>
+                    <td className="hidden px-5 py-4 align-top leading-relaxed text-gray-600 dark:text-gray-400 sm:table-cell">{item.examples}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
           <div className="mt-3 space-y-1">
             <p className="text-xs text-gray-400 dark:text-gray-500">
