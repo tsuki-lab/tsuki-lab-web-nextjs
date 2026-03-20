@@ -428,16 +428,19 @@ export default function Pricing() {
         >
           <Link
             href="/contact"
-            className="group relative block overflow-hidden rounded-3xl border border-purple-200/50 bg-linear-to-br from-purple-50 via-pink-50 to-orange-50 p-8 shadow-lg shadow-purple-500/10 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-purple-500/20 dark:border-purple-800/50 dark:from-purple-950/30 dark:via-pink-950/30 dark:to-orange-950/30"
+            className="group relative block overflow-hidden rounded-2xl border border-purple-200/50 bg-linear-to-br from-purple-50 via-pink-50 to-orange-50 p-6 shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md dark:border-purple-800/50 dark:from-purple-950/30 dark:via-pink-950/30 dark:to-orange-950/30"
           >
-            <div className="absolute right-0 top-0 h-40 w-40 rounded-full bg-linear-to-br from-purple-400/20 to-pink-400/20 blur-3xl opacity-50 transition-opacity duration-300 group-hover:opacity-70" />
-            <div className="relative text-center">
-              <p className="mb-2 text-sm font-medium text-gray-500 dark:text-gray-400">
-                ご依頼・ご相談はお気軽に
-              </p>
-              <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
+            <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-linear-to-br from-purple-400/20 to-pink-400/20 blur-2xl opacity-50 transition-opacity duration-300 group-hover:opacity-70" />
+            <div className="relative">
+              <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
                 contact
+              </p>
+              <h2 className="mb-1 text-xl font-bold text-gray-900 dark:text-white">
+                ご依頼・ご相談はお気軽に
               </h2>
+              <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
+                Discord・メール・X（Twitter）にてお問い合わせいただけます。
+              </p>
               <div className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 transition-transform duration-200 group-hover:translate-x-1 dark:text-purple-400">
                 <span>連絡先を見る</span>
                 <span className="text-lg">→</span>
