@@ -192,6 +192,33 @@ export default function Contact() {
               </div>
             </div>
           </section>
+
+          <div
+            className={`mt-8 ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
+            style={isMounted ? { animationDelay: "0.9s" } : {}}
+          >
+            <Link
+              href="/pricing"
+              className="group relative block overflow-hidden rounded-3xl border border-orange-200/50 bg-linear-to-br from-orange-50 via-pink-50 to-purple-50 p-6 shadow-lg shadow-orange-500/10 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-orange-500/20 dark:border-orange-800/50 dark:from-orange-950/30 dark:via-pink-950/30 dark:to-purple-950/30"
+            >
+              <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-linear-to-br from-orange-400/20 to-pink-400/20 blur-2xl opacity-50 transition-opacity duration-300 group-hover:opacity-70" />
+              <div className="relative">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-orange-500 dark:text-orange-400">
+                  pricing
+                </p>
+                <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-white">
+                  制作料金ガイドを見る
+                </h2>
+                <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
+                  制作メニュー・参考価格・オプション料金をご確認いただけます。
+                </p>
+                <div className="inline-flex items-center gap-2 text-sm font-semibold text-orange-600 transition-transform duration-200 group-hover:translate-x-1 dark:text-orange-400">
+                  <span>料金表を見る</span>
+                  <span className="text-lg">→</span>
+                </div>
+              </div>
+            </Link>
+          </div>
       </main>
     </div>
   );
