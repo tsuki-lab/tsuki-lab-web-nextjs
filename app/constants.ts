@@ -18,6 +18,7 @@ export const LINKS = [
   { label: "GitHub", href: "https://github.com/tsuki-lab", hoverClass: "hover:from-gray-100 hover:to-gray-200 dark:hover:from-gray-800/80 dark:hover:to-gray-700/80" },
   { label: "Zenn", href: "https://zenn.dev/rabbit", hoverClass: "hover:from-emerald-50 hover:to-teal-50 dark:hover:from-emerald-950/30 dark:hover:to-teal-950/30" },
   { label: "Illust", href: "https://art.tsuki-lab.net", hoverClass: "hover:from-pink-50 hover:to-rose-50 dark:hover:from-pink-950/30 dark:hover:to-rose-950/30" },
+  { label: "Miques", href: "https://miques.tsuki-lab.net/", hoverClass: "hover:from-violet-50 hover:to-purple-50 dark:hover:from-violet-950/30 dark:hover:to-purple-950/30" },
   { label: "Booth", href: `${BOOTH_BASE_URL}/`, hoverClass: "hover:from-orange-50 hover:to-pink-50 dark:hover:from-orange-950/30 dark:hover:to-pink-950/30" },
 ] as const;
 
