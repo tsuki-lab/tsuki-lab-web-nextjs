@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { Header } from "../components/Header";
 import { Breadcrumb } from "../components/Breadcrumb";
+import { SectionDivider } from "../components/SectionDivider";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://tsuki-lab.net";
 
@@ -11,18 +13,8 @@ const breadcrumbJsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "ホーム",
-      item: siteUrl,
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "contact",
-      item: `${siteUrl}/contact`,
-    },
+    { "@type": "ListItem", position: 1, name: "ホーム", item: siteUrl },
+    { "@type": "ListItem", position: 2, name: "contact", item: `${siteUrl}/contact` },
   ],
 };
 
@@ -30,197 +22,191 @@ export default function Contact() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    requestAnimationFrame(() => {
-      setIsMounted(true);
-    });
+    requestAnimationFrame(() => setIsMounted(true));
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-purple-50/30 dark:from-gray-950 dark:via-black dark:to-purple-950/20 animate-gradient">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <main className="container mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <div className={isMounted ? "animate-header-entrance" : "opacity-0"}>
-          <Header />
+      <header className="border-b border-gray-100 dark:border-gray-800/60">
+        <div className={`mx-auto max-w-3xl px-6 py-4 ${isMounted ? "animate-fade-in" : "opacity-0"}`}>
+          <Header minimal />
         </div>
-        
-        <div className={isMounted ? "animate-header-entrance" : ""} style={isMounted ? { animationDelay: "0.1s" } : { opacity: 0 }}>
+      </header>
+      <main className="mx-auto max-w-3xl px-6 py-12 sm:py-16">
+        <div
+          className={isMounted ? "animate-fade-in" : "opacity-0"}
+          style={isMounted ? { animationDelay: "0.05s" } : {}}
+        >
           <Breadcrumb items={[{ label: "ホーム", href: "/" }, { label: "contact" }]} />
         </div>
 
-        <section>
-            <h1
-              className={`mb-8 text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl ${
-                isMounted ? "animate-card-entrance" : "opacity-0"
-              }`}
-              style={isMounted ? { animationDelay: "0.2s" } : {}}
+        <section
+          className={isMounted ? "animate-fade-in" : "opacity-0"}
+          style={isMounted ? { animationDelay: "0.1s" } : {}}
+        >
+          <h1 className="mb-8 text-2xl font-bold text-gray-900 dark:text-white">
+            contact
+          </h1>
+
+          {/* Contact methods */}
+          <div className="mb-12 -mx-3">
+            <a
+              href="https://discord.com/users/your-discord-id"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-between rounded-lg px-3 py-3 transition-all hover:bg-purple-50 dark:hover:bg-purple-950/20"
             >
-              contact
-            </h1>
-            
-            <div className="mb-8 space-y-4">
-                {/* Discord */}
-                <a
-                  href="https://discord.com/users/your-discord-id"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`group/item block relative overflow-hidden rounded-2xl border border-purple-200/50 bg-linear-to-r from-purple-50 via-indigo-50 to-purple-50 p-6 shadow-md transition-all duration-200 hover:scale-[1.02] dark:border-purple-800/50 dark:from-purple-950/30 dark:via-indigo-950/30 dark:to-purple-950/30 ${
-                    isMounted ? "animate-item-entrance" : "opacity-0"
-                  }`}
-                  style={isMounted ? { animationDelay: "0.5s" } : {}}
-                >
-                  <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                    Discord
-                  </div>
-                  <div className="flex items-center justify-between text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    <span>tsuki_lab</span>
-                    <span className="opacity-0 transition-opacity duration-200 group-hover/item:opacity-100">
-                      →
-                    </span>
-                  </div>
-                </a>
-
-                {/* Email */}
-                <a
-                  href="mailto:me@tsuki-lab.net"
-                  className={`group/item block relative overflow-hidden rounded-2xl border border-purple-200/50 bg-linear-to-r from-purple-50 via-pink-50 to-purple-50 p-6 shadow-md transition-all duration-200 hover:scale-[1.02] dark:border-purple-800/50 dark:from-purple-950/30 dark:via-pink-950/30 dark:to-purple-950/30 ${
-                    isMounted ? "animate-item-entrance" : "opacity-0"
-                  }`}
-                  style={isMounted ? { animationDelay: "0.6s" } : {}}
-                >
-                  <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                    Email
-                  </div>
-                  <div className="flex items-center justify-between text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    <span>me@tsuki-lab.net</span>
-                    <span className="opacity-0 transition-opacity duration-200 group-hover/item:opacity-100">
-                      →
-                    </span>
-                  </div>
-                </a>
-
-                {/* Twitter */}
-                <a
-                  href="https://twitter.com/liscoresia"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`group/item block relative overflow-hidden rounded-2xl border border-blue-200/50 bg-linear-to-r from-blue-50 via-cyan-50 to-blue-50 p-6 shadow-md transition-all duration-200 hover:scale-[1.02] dark:border-blue-800/50 dark:from-blue-950/30 dark:via-cyan-950/30 dark:to-blue-950/30 ${
-                    isMounted ? "animate-item-entrance" : "opacity-0"
-                  }`}
-                  style={isMounted ? { animationDelay: "0.7s" } : {}}
-                >
-                  <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                    Twitter
-                  </div>
-                  <div className="flex items-center justify-between text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    <span>@liscoresia</span>
-                    <span className="opacity-0 transition-opacity duration-200 group-hover/item:opacity-100">
-                      →
-                    </span>
-                  </div>
-                </a>
-            </div>
-
-            <div
-              className={`mt-6 rounded-xl border border-gray-200/50 bg-linear-to-r from-gray-50/30 via-gray-50/20 to-gray-50/30 p-5 shadow-md dark:border-gray-700/50 dark:from-gray-900/20 dark:via-gray-900/10 dark:to-gray-900/20 ${
-                isMounted ? "animate-card-entrance" : "opacity-0"
-              }`}
-              style={isMounted ? { animationDelay: "0.8s" } : {}}
-            >
-              <div className="mb-5">
-                <h2 className="mb-3 text-lg font-semibold leading-relaxed tracking-wide text-gray-900 dark:text-white sm:text-xl">
-                  お問い合わせいただける内容について
-                </h2>
-                <ul className="space-y-3 text-sm leading-relaxed tracking-wide text-gray-700 dark:text-gray-300">
-                  <li className="flex items-start">
-                    <span className="mr-2.5 mt-1 text-gray-500 dark:text-gray-400">•</span>
-                    <div>
-                      <span className="text-sm font-medium leading-relaxed tracking-wide text-gray-800 dark:text-gray-200">ツールの相談</span>
-                      <p className="mt-1.5 text-sm leading-relaxed tracking-wide text-gray-600 dark:text-gray-400">
-                        ツールの開発や導入に関するご相談、カスタマイズのご要望など、お気軽にお問い合わせください。
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-2.5 mt-1 text-gray-500 dark:text-gray-400">•</span>
-                    <div>
-                      <span className="text-sm font-medium leading-relaxed tracking-wide text-gray-800 dark:text-gray-200">販売しているツールの不具合、サポート依頼</span>
-                      <p className="mt-1.5 text-sm leading-relaxed tracking-wide text-gray-600 dark:text-gray-400">
-                        当サイトで販売しているツールに関する不具合報告やサポート依頼は、
-                        <a
-                          href="https://docs.google.com/forms/d/e/1FAIpQLScHkZ-bH-DydiC-7z6zPXdnfIv2okTugu5KPnPtmCVxIFMkLw/viewform?usp=header"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-purple-600 underline hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300"
-                        >
-                          こちら
-                        </a>
-                        からお問い合わせください。できる限り迅速に対応いたします。
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="mr-2.5 mt-1 text-gray-500 dark:text-gray-400">•</span>
-                    <div>
-                      <span className="text-sm font-medium leading-relaxed tracking-wide text-gray-800 dark:text-gray-200">業務提携</span>
-                      <p className="mt-1.5 text-sm leading-relaxed tracking-wide text-gray-600 dark:text-gray-400">
-                        共同開発や業務提携に関するご相談も承っております。詳細についてはお問い合わせください。
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="mb-5 border-t border-gray-200/50 pt-5 dark:border-gray-700/50">
-                <h3 className="mb-3 text-base font-medium leading-relaxed tracking-wide text-gray-800 dark:text-gray-200 sm:text-lg">
-                  返信目安について
-                </h3>
-                <p className="text-sm leading-relaxed tracking-wide text-gray-700 dark:text-gray-300">
-                  お問い合わせいただいた内容により、返信までにお時間をいただく場合がございます。通常、2〜3営業日以内にご返信いたします。お急ぎの場合は、お問い合わせ内容にその旨をご記載いただけますと幸いです。
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-purple-400 dark:text-purple-500">
+                  Discord
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-gray-900 dark:text-white">
+                  tsuki_lab
                 </p>
               </div>
+              <ExternalLink
+                size={13}
+                className="text-gray-300 opacity-0 transition-opacity group-hover:opacity-100 group-hover:text-purple-400 dark:text-gray-600"
+              />
+            </a>
 
-              <div className="border-t border-gray-200/50 pt-5 dark:border-gray-700/50">
-                <h3 className="mb-3 text-base font-medium leading-relaxed tracking-wide text-gray-800 dark:text-gray-200 sm:text-lg">
-                  その他
-                </h3>
-                <p className="text-sm leading-relaxed tracking-wide text-gray-600 dark:text-gray-400">
-                  お問い合わせの内容によっては、ご返信できない場合や、お時間をいただく場合がございます。あらかじめご了承ください。
+            <a
+              href="mailto:me@tsuki-lab.net"
+              className="group flex items-center justify-between rounded-lg px-3 py-3 transition-all hover:bg-purple-50 dark:hover:bg-purple-950/20"
+            >
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-purple-400 dark:text-purple-500">
+                  Email
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-gray-900 dark:text-white">
+                  me@tsuki-lab.net
                 </p>
               </div>
-            </div>
-          </section>
+              <ExternalLink
+                size={13}
+                className="text-gray-300 opacity-0 transition-opacity group-hover:opacity-100 group-hover:text-purple-400 dark:text-gray-600"
+              />
+            </a>
 
-          <div
-            className={`mt-8 ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-            style={isMounted ? { animationDelay: "0.9s" } : {}}
+            <a
+              href="https://twitter.com/liscoresia"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center justify-between rounded-lg px-3 py-3 transition-all hover:bg-purple-50 dark:hover:bg-purple-950/20"
+            >
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-purple-400 dark:text-purple-500">
+                  Twitter
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-gray-900 dark:text-white">
+                  @liscoresia
+                </p>
+              </div>
+              <ExternalLink
+                size={13}
+                className="text-gray-300 opacity-0 transition-opacity group-hover:opacity-100 group-hover:text-purple-400 dark:text-gray-600"
+              />
+            </a>
+          </div>
+
+          <SectionDivider delay="0.15s" />
+
+          {/* Info */}
+          <div className="space-y-8 rounded-xl bg-gray-50 p-6 dark:bg-gray-900">
+            <div>
+              <h2 className="mb-3 text-sm font-semibold text-gray-900 dark:text-white">
+                お問い合わせいただける内容について
+              </h2>
+              <ul className="space-y-4">
+                <li>
+                  <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                    ツールの相談
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                    ツールの開発や導入に関するご相談、カスタマイズのご要望など、お気軽にお問い合わせください。
+                  </p>
+                </li>
+                <li>
+                  <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                    販売しているツールの不具合、サポート依頼
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                    当サイトで販売しているツールに関する不具合報告やサポート依頼は、
+                    <a
+                      href="https://docs.google.com/forms/d/e/1FAIpQLScHkZ-bH-DydiC-7z6zPXdnfIv2okTugu5KPnPtmCVxIFMkLw/viewform?usp=header"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-purple-600 underline hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300"
+                    >
+                      こちら
+                    </a>
+                    からお問い合わせください。
+                  </p>
+                </li>
+                <li>
+                  <p className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                    業務提携
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                    共同開発や業務提携に関するご相談も承っております。
+                  </p>
+                </li>
+              </ul>
+            </div>
+
+            <div className="border-t border-gray-200 pt-6 dark:border-gray-800">
+              <h2 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white">
+                返信目安
+              </h2>
+              <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                通常、2〜3営業日以内にご返信いたします。お急ぎの場合はその旨をご記載ください。
+              </p>
+            </div>
+
+            <div className="border-t border-gray-200 pt-6 dark:border-gray-800">
+              <h2 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white">
+                その他
+              </h2>
+              <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                内容によってはご返信できない場合や、お時間をいただく場合がございます。あらかじめご了承ください。
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <SectionDivider delay="0.35s" />
+
+        <div
+          className={`${isMounted ? "animate-fade-in" : "opacity-0"}`}
+          style={isMounted ? { animationDelay: "0.3s" } : {}}
+        >
+          <Link
+            href="/pricing"
+            className="group block rounded-xl border border-gray-200 p-6 transition-all hover:border-purple-200 hover:bg-purple-50/50 dark:border-gray-800 dark:hover:border-purple-800/40 dark:hover:bg-purple-950/10"
           >
-            <Link
-              href="/pricing"
-              className="group relative block overflow-hidden rounded-3xl border border-orange-200/50 bg-linear-to-br from-orange-50 via-pink-50 to-purple-50 p-6 shadow-lg shadow-orange-500/10 transition-all duration-300 hover:scale-[1.01] hover:shadow-xl hover:shadow-orange-500/20 dark:border-orange-800/50 dark:from-orange-950/30 dark:via-pink-950/30 dark:to-purple-950/30"
-            >
-              <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-linear-to-br from-orange-400/20 to-pink-400/20 blur-2xl opacity-50 transition-opacity duration-300 group-hover:opacity-70" />
-              <div className="relative">
-                <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-orange-500 dark:text-orange-400">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
                   pricing
                 </p>
-                <h2 className="mb-1 text-lg font-bold text-gray-900 dark:text-white">
+                <p className="mt-2 text-base font-semibold text-gray-900 dark:text-white">
                   制作料金ガイドを見る
-                </h2>
-                <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
+                </p>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
                   制作メニュー・参考価格・オプション料金をご確認いただけます。
                 </p>
-                <div className="inline-flex items-center gap-2 text-sm font-semibold text-orange-600 transition-transform duration-200 group-hover:translate-x-1 dark:text-orange-400">
-                  <span>料金表を見る</span>
-                  <span className="text-lg">→</span>
-                </div>
               </div>
-            </Link>
-          </div>
+              <span className="mt-1 flex-shrink-0 text-gray-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-purple-400">
+                →
+              </span>
+            </div>
+          </Link>
+        </div>
       </main>
     </div>
   );
 }
-

@@ -144,7 +144,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja">
-      <body
+<body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased`}
       >
         <script

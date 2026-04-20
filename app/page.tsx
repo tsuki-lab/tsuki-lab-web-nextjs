@@ -2,166 +2,149 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import { Header } from "./components/Header";
+import { SectionDivider } from "./components/SectionDivider";
 import { PROFILE, CONTACT, LINKS, PRODUCTS } from "./constants";
-
-const LINK_BASE_CLASS =
-  "group/link flex items-center justify-between rounded-xl bg-linear-to-r from-gray-50 to-gray-100/50 p-3.5 text-sm font-medium text-gray-900 transition-all duration-200 hover:scale-[1.02] hover:bg-linear-to-r hover:shadow-md dark:from-gray-800 dark:to-gray-900 dark:text-gray-100";
-
-const PRODUCT_CARD_BASE_CLASS =
-  "group relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white/80 p-6 shadow-sm backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg dark:border-gray-800/50 dark:bg-gray-900/80";
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    requestAnimationFrame(() => {
-      setIsMounted(true);
-    });
+    requestAnimationFrame(() => setIsMounted(true));
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-purple-50/30 dark:from-gray-950 dark:via-black dark:to-purple-950/20 animate-gradient">
-      <main className="container mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <div
-          className={isMounted ? "animate-header-entrance" : ""}
-          style={!isMounted ? { opacity: 0 } : {}}
-        >
+    <div className="min-h-screen bg-white dark:bg-gray-950">
+      <main className="mx-auto max-w-3xl px-6 py-16 sm:py-24">
+        <div className={isMounted ? "animate-fade-in" : "opacity-0"}>
           <Header />
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {/* プロフィールカード */}
-          <div
-            className={`group relative col-span-1 overflow-hidden rounded-3xl border border-gray-200/50 bg-white/80 p-8 shadow-sm backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/80 sm:col-span-2 lg:col-span-2 ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-            style={isMounted ? { animationDelay: "0.2s" } : {}}
-          >
-            <div className="absolute inset-0 bg-linear-to-br from-purple-500/5 to-pink-500/5" />
-            <div className="relative">
-              <div className="mb-6 flex items-center gap-5">
-                <div
-                  className={`h-20 w-20 rounded-full overflow-hidden shadow-lg shadow-purple-500/30 ${isMounted ? "animate-avatar-float" : ""}`}
-                  style={isMounted ? { animationDelay: "1s" } : {}}
-                >
-                  <img
-                    src={PROFILE.image.src}
-                    alt={PROFILE.image.alt}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
-                    {PROFILE.name}
-                  </h1>
-                  <p className="mt-1 text-sm font-medium text-purple-600 dark:text-purple-400">
-                    {PROFILE.role}
-                  </p>
-                </div>
-              </div>
-              <p className="leading-relaxed text-gray-700 dark:text-gray-300">
-                {PROFILE.bio}
+        {/* Profile */}
+        <section className={isMounted ? "animate-fade-in" : "opacity-0"} style={isMounted ? { animationDelay: "0.1s" } : {}}>
+          <div className="mb-3 flex items-center gap-2">
+            <span className="h-1 w-1 rounded-full bg-purple-400" />
+            <span className="text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
+              about
+            </span>
+          </div>
+          <div className="flex items-start justify-between gap-6">
+            <div>
+              <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+                {PROFILE.name}
+              </h1>
+              <p className="mt-2 text-sm font-medium text-purple-500 dark:text-purple-400">
+                {PROFILE.role}
               </p>
             </div>
+            <img
+              src={PROFILE.image.src}
+              alt={PROFILE.image.alt}
+              className="mt-1 h-16 w-16 flex-shrink-0 rounded-full"
+            />
           </div>
+          <p className="mt-5 text-sm leading-relaxed text-gray-600 dark:text-gray-300 text-pretty">
+            {PROFILE.bio}
+          </p>
+        </section>
 
-          {/* Contact カード */}
+        <SectionDivider delay="0.15s" />
+
+        {/* Links */}
+        <section className={isMounted ? "animate-fade-in" : "opacity-0"} style={isMounted ? { animationDelay: "0.2s" } : {}}>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="h-1 w-1 rounded-full bg-purple-400" />
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
+              links
+            </h2>
+          </div>
+          <div className="-mx-3">
+            {LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between rounded-lg px-3 py-2.5 text-sm text-gray-700 transition-all hover:bg-purple-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-purple-950/20 dark:hover:text-white"
+              >
+                <span>{link.label}</span>
+                <ExternalLink
+                  size={13}
+                  className="text-gray-300 transition-colors group-hover:text-purple-400 dark:text-gray-600 dark:group-hover:text-purple-400"
+                />
+              </a>
+            ))}
+          </div>
+        </section>
+
+        <SectionDivider delay="0.25s" />
+
+        {/* Contact CTA */}
+        <section className={isMounted ? "animate-fade-in" : "opacity-0"} style={isMounted ? { animationDelay: "0.3s" } : {}}>
           <Link
             href={CONTACT.href}
-            className={`group relative col-span-1 overflow-hidden rounded-3xl border border-purple-200/50 bg-linear-to-br from-purple-50 via-pink-50 to-orange-50 p-6 shadow-lg shadow-purple-500/10 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-500/20 dark:border-purple-800/50 dark:from-purple-950/30 dark:via-pink-950/30 dark:to-orange-950/30 sm:col-span-2 lg:col-span-1 ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-            style={isMounted ? { animationDelay: "0.4s" } : {}}
+            className="group block rounded-xl border border-gray-200 p-6 transition-all hover:border-purple-200 hover:bg-purple-50/50 dark:border-gray-800 dark:hover:border-purple-800/40 dark:hover:bg-purple-950/10"
           >
-            <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-linear-to-br from-purple-400/30 to-pink-400/30 blur-2xl opacity-50 transition-opacity duration-300 group-hover:opacity-70" />
-            <div className="relative">
-              <h2 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
-                {CONTACT.title}
-              </h2>
-              <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-                {CONTACT.description}
-              </p>
-              <div className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 transition-transform duration-200 group-hover:translate-x-1 dark:text-purple-400">
-                <span>{CONTACT.linkText}</span>
-                <span className="text-lg">→</span>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
+                  contact
+                </p>
+                <p className="mt-2 text-base font-semibold text-gray-900 dark:text-white">
+                  {CONTACT.title}
+                </p>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  {CONTACT.description}
+                </p>
               </div>
+              <span className="mt-1 flex-shrink-0 text-gray-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-purple-400">
+                →
+              </span>
             </div>
           </Link>
-        </div>
+        </section>
 
-        {/* Links カード */}
-        <div className="mt-12">
-          <div
-            className={`group relative overflow-hidden rounded-3xl border border-gray-200/50 bg-white/80 p-6 shadow-sm backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/80 ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-            style={isMounted ? { animationDelay: "0.6s" } : {}}
-          >
-            <div className="absolute right-0 top-0 h-28 w-28 rounded-full bg-linear-to-br from-pink-400/20 to-purple-400/20 blur-2xl" />
-            <div className="relative">
-              <h2 className="mb-5 text-lg font-bold text-gray-900 dark:text-white">
-                links
-              </h2>
-              <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
-                {LINKS.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${LINK_BASE_CLASS} ${link.hoverClass}`}
-                  >
-                    <span>{link.label}</span>
-                    <span className="text-xs opacity-60 transition-opacity duration-200 group-hover/link:opacity-100">
-                      ↗
-                    </span>
-                  </a>
-                ))}
-              </div>
-            </div>
+        <SectionDivider delay="0.35s" />
+
+        {/* Products */}
+        <section className={isMounted ? "animate-fade-in" : "opacity-0"} style={isMounted ? { animationDelay: "0.4s" } : {}}>
+          <div className="mb-4 flex items-center gap-2">
+            <span className="h-1 w-1 rounded-full bg-purple-400" />
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
+              products
+            </h2>
           </div>
-        </div>
-
-        {/* Products セクション */}
-        <div className="mt-12">
-          <h2
-            className={`mb-6 text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-            style={isMounted ? { animationDelay: "0.8s" } : {}}
-          >
-            products
-          </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {PRODUCTS.map((product, index) => (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {PRODUCTS.map((product) => (
               <a
                 key={product.href}
                 href={product.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${PRODUCT_CARD_BASE_CLASS} ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-                style={
-                  isMounted
-                    ? { animationDelay: `${1 + index * 0.05}s` }
-                    : undefined
-                }
+                className="group flex flex-col justify-between rounded-xl border border-gray-100 p-4 transition-all hover:border-purple-200 hover:bg-purple-50/50 dark:border-gray-800 dark:hover:border-purple-800/60 dark:hover:bg-purple-950/10"
               >
-                <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-linear-to-br from-orange-400/20 to-pink-400/20 blur-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                <div className="relative">
-                  <div className="mb-3 flex items-start justify-between gap-2">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                <div>
+                  <div className="mb-1 flex items-start justify-between gap-2">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">
                       {product.name}
-                    </h3>
-                    <span className="text-xs opacity-60 transition-opacity duration-200 group-hover:opacity-100">
-                      ↗
-                    </span>
+                    </p>
+                    <ExternalLink
+                      size={13}
+                      className="mt-0.5 flex-shrink-0 text-gray-300 opacity-0 transition-opacity group-hover:opacity-100 group-hover:text-purple-400 dark:text-gray-600"
+                    />
                   </div>
-                  <p className="mb-4 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+                  <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
                     {product.description}
                   </p>
-                  <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                    <span className="font-semibold text-orange-600 dark:text-orange-400">
-                      {product.price}
-                    </span>
-                  </div>
                 </div>
+                <p className="mt-3 text-xs font-medium text-gray-500 dark:text-gray-400">
+                  {product.price}
+                </p>
               </a>
             ))}
           </div>
-        </div>
+        </section>
       </main>
     </div>
   );

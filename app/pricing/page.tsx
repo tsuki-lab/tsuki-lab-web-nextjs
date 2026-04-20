@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Header } from "../components/Header";
 import { Breadcrumb } from "../components/Breadcrumb";
+import { SectionDivider } from "../components/SectionDivider";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://tsuki-lab.net";
 
@@ -21,57 +22,36 @@ const MENU_ITEMS = [
     name: "リアクション連動演出",
     price: "¥30,000〜",
     description: "スパチャ・メンバー登録等に反応するスロット、ルーレット、ガチャ演出",
-    color: "from-purple-50 via-pink-50 to-purple-50 dark:from-purple-950/30 dark:via-pink-950/30 dark:to-purple-950/30",
-    border: "border-purple-200/50 dark:border-purple-800/50",
-    priceColor: "text-purple-600 dark:text-purple-400",
   },
   {
     name: "音声・音楽ビジュアライザー",
     price: "¥25,000〜",
     description: "音声連動スペクトラムアニメーション、歌枠・DJ配信向け",
-    color: "from-blue-50 via-cyan-50 to-blue-50 dark:from-blue-950/30 dark:via-cyan-950/30 dark:to-blue-950/30",
-    border: "border-blue-200/50 dark:border-blue-800/50",
-    priceColor: "text-blue-600 dark:text-blue-400",
   },
   {
     name: "セトリ・楽曲表示ツール",
     price: "¥25,000〜",
     description: "歌枠中の曲名リアルタイム表示、セトリ管理・共有機能",
-    color: "from-teal-50 via-emerald-50 to-teal-50 dark:from-teal-950/30 dark:via-emerald-950/30 dark:to-teal-950/30",
-    border: "border-teal-200/50 dark:border-teal-800/50",
-    priceColor: "text-teal-600 dark:text-teal-400",
   },
   {
     name: "コメント・投票連動演出",
     price: "¥30,000〜",
     description: "チャット連動アンケート、ランキング表示、コメント抽選",
-    color: "from-pink-50 via-rose-50 to-pink-50 dark:from-pink-950/30 dark:via-rose-950/30 dark:to-pink-950/30",
-    border: "border-pink-200/50 dark:border-pink-800/50",
-    priceColor: "text-pink-600 dark:text-pink-400",
   },
   {
     name: "タイマー・カウントダウン演出",
     price: "¥15,000〜",
     description: "配信開始カウントダウン、企画用タイマー等",
-    color: "from-orange-50 via-amber-50 to-orange-50 dark:from-orange-950/30 dark:via-amber-950/30 dark:to-orange-950/30",
-    border: "border-orange-200/50 dark:border-orange-800/50",
-    priceColor: "text-orange-600 dark:text-orange-400",
   },
   {
     name: "ミニゲーム・抽選系ツール",
     price: "¥35,000〜",
     description: "くじ引き、ビンゴ、すごろく等の視聴者参加型ゲーム",
-    color: "from-violet-50 via-purple-50 to-violet-50 dark:from-violet-950/30 dark:via-purple-950/30 dark:to-violet-950/30",
-    border: "border-violet-200/50 dark:border-violet-800/50",
-    priceColor: "text-violet-600 dark:text-violet-400",
   },
   {
     name: "その他カスタム演出",
     price: "要相談",
     description: "上記に当てはまらないオリジナル演出、アイデア段階から相談OK",
-    color: "from-gray-50 via-slate-50 to-gray-50 dark:from-gray-900/30 dark:via-slate-900/30 dark:to-gray-900/30",
-    border: "border-gray-200/50 dark:border-gray-700/50",
-    priceColor: "text-gray-600 dark:text-gray-400",
   },
 ] as const;
 
@@ -178,129 +158,141 @@ const TERMS = [
   },
 ] as const;
 
+function SectionLabel({ accent, label }: { accent: string; label: string }) {
+  return (
+    <div className="mb-1 flex items-center gap-2">
+      <span className={`h-1 w-1 rounded-full ${accent}`} />
+      <p className={`text-xs font-semibold uppercase tracking-widest ${accent.replace("bg-", "text-")}`}>
+        {label}
+      </p>
+    </div>
+  );
+}
+
+function PricingTable({
+  rows,
+  priceKey,
+  descKey,
+}: {
+  rows: readonly { name: string; price: string; [key: string]: string }[];
+  priceKey: string;
+  descKey: string;
+}) {
+  return (
+    <div className="overflow-hidden rounded-xl border border-gray-100 dark:border-gray-800">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="border-b border-gray-100 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
+            <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">
+              カテゴリ
+            </th>
+            <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500 whitespace-nowrap">
+              参考価格
+            </th>
+            <th className="hidden px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500 sm:table-cell">
+              概要
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((item, index) => (
+            <tr
+              key={item.name}
+              className={`${index < rows.length - 1 ? "border-b border-gray-100 dark:border-gray-800" : ""} transition-colors hover:bg-gray-50 dark:hover:bg-gray-900/50`}
+            >
+              <td className="px-5 py-4 align-top">
+                <div className="font-medium text-gray-900 dark:text-white">{item.name}</div>
+                <div className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400 sm:hidden">
+                  {item[descKey]}
+                </div>
+              </td>
+              <td className="px-5 py-4 align-top whitespace-nowrap font-semibold text-purple-600 dark:text-purple-400">
+                {item[priceKey]}
+              </td>
+              <td className="hidden px-5 py-4 align-top text-xs leading-relaxed text-gray-500 dark:text-gray-400 sm:table-cell">
+                {item[descKey]}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function Pricing() {
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    requestAnimationFrame(() => {
-      setIsMounted(true);
-    });
+    requestAnimationFrame(() => setIsMounted(true));
   }, []);
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-purple-50/30 dark:from-gray-950 dark:via-black dark:to-purple-950/20 animate-gradient">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <main className="container mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:py-20">
-        <div className={isMounted ? "animate-header-entrance" : "opacity-0"}>
-          <Header />
+      <header className="border-b border-gray-100 dark:border-gray-800/60">
+        <div className={`mx-auto max-w-3xl px-6 py-4 ${isMounted ? "animate-fade-in" : "opacity-0"}`}>
+          <Header minimal />
         </div>
-
+      </header>
+      <main className="mx-auto max-w-3xl px-6 py-12 sm:py-16">
         <div
-          className={isMounted ? "animate-header-entrance" : ""}
-          style={isMounted ? { animationDelay: "0.1s" } : { opacity: 0 }}
+          className={isMounted ? "animate-fade-in" : "opacity-0"}
+          style={isMounted ? { animationDelay: "0.05s" } : {}}
         >
           <Breadcrumb items={[{ label: "ホーム", href: "/" }, { label: "pricing" }]} />
         </div>
 
-        <h1
-          className={`mb-2 text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl ${
-            isMounted ? "animate-card-entrance" : "opacity-0"
-          }`}
-          style={isMounted ? { animationDelay: "0.2s" } : {}}
+        <div
+          className={`mb-12 ${isMounted ? "animate-fade-in" : "opacity-0"}`}
+          style={isMounted ? { animationDelay: "0.1s" } : {}}
         >
-          pricing
-        </h1>
-        <p
-          className={`mb-12 text-sm text-gray-500 dark:text-gray-400 ${
-            isMounted ? "animate-card-entrance" : "opacity-0"
-          }`}
-          style={isMounted ? { animationDelay: "0.25s" } : {}}
-        >
-          配信演出ツール 制作料金ガイド
-        </p>
+          <h1 className="mb-1 text-2xl font-bold text-gray-900 dark:text-white">
+            pricing
+          </h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            配信演出ツール 制作料金ガイド
+          </p>
+        </div>
 
-        {/* Menu セクション */}
+        {/* Menu */}
         <section
-          className={`mb-16 ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-          style={isMounted ? { animationDelay: "0.3s" } : {}}
+          className={isMounted ? "animate-fade-in" : "opacity-0"}
+          style={isMounted ? { animationDelay: "0.15s" } : {}}
         >
-          <div className="mb-1 text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
-            Menu
-          </div>
-          <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
+          <SectionLabel accent="bg-purple-400" label="Menu" />
+          <h2 className="mb-5 text-base font-semibold text-gray-900 dark:text-white">
             制作メニュー・参考価格
           </h2>
-          <div className="overflow-hidden rounded-2xl border border-gray-200/50 bg-white/80 shadow-sm backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/80">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
-                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">カテゴリ</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 whitespace-nowrap">参考価格</th>
-                  <th className="hidden px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 sm:table-cell">概要</th>
-                </tr>
-              </thead>
-              <tbody>
-                {MENU_ITEMS.map((item, index) => (
-                  <tr
-                    key={item.name}
-                    className={index < MENU_ITEMS.length - 1 ? "border-b border-gray-100 dark:border-gray-800" : ""}
-                  >
-                    <td className="px-5 py-4 align-top">
-                      <div className="font-semibold text-gray-900 dark:text-white">{item.name}</div>
-                      <div className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400 sm:hidden">{item.description}</div>
-                    </td>
-                    <td className="px-5 py-4 align-top whitespace-nowrap font-bold text-purple-600 dark:text-purple-400">{item.price}</td>
-                    <td className="hidden px-5 py-4 align-top leading-relaxed text-gray-600 dark:text-gray-400 sm:table-cell">{item.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <PricingTable
+            rows={MENU_ITEMS as unknown as { name: string; price: string; [key: string]: string }[]}
+            priceKey="price"
+            descKey="description"
+          />
         </section>
 
-        {/* Customize セクション */}
+        <SectionDivider delay="0.175s" />
+
+        {/* Customize */}
         <section
-          className={`mb-16 ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-          style={isMounted ? { animationDelay: "0.7s" } : {}}
+          className={isMounted ? "animate-fade-in" : "opacity-0"}
+          style={isMounted ? { animationDelay: "0.2s" } : {}}
         >
-          <div className="mb-1 text-xs font-semibold uppercase tracking-widest text-orange-500 dark:text-orange-400">
-            Customize
-          </div>
-          <h2 className="mb-2 text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
+          <SectionLabel accent="bg-orange-400" label="Customize" />
+          <h2 className="mb-2 text-base font-semibold text-gray-900 dark:text-white">
             ツキラボ販売ツールの独自カスタマイズ
           </h2>
-          <p className="mb-6 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+          <p className="mb-5 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
             既存ツールをベースに、あなたの配信スタイルに合わせてカスタマイズします。
           </p>
-          <div className="overflow-hidden rounded-2xl border border-gray-200/50 bg-white/80 shadow-sm backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/80">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
-                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">対象ツール</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 whitespace-nowrap">参考価格</th>
-                  <th className="hidden px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 sm:table-cell">カスタム例</th>
-                </tr>
-              </thead>
-              <tbody>
-                {CUSTOMIZE_ITEMS.map((item, index) => (
-                  <tr
-                    key={item.name}
-                    className={index < CUSTOMIZE_ITEMS.length - 1 ? "border-b border-gray-100 dark:border-gray-800" : ""}
-                  >
-                    <td className="px-5 py-4 align-top">
-                      <div className="font-semibold text-gray-900 dark:text-white">{item.name}</div>
-                      <div className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400 sm:hidden">{item.examples}</div>
-                    </td>
-                    <td className="px-5 py-4 align-top whitespace-nowrap font-bold text-orange-600 dark:text-orange-400">{item.price}</td>
-                    <td className="hidden px-5 py-4 align-top leading-relaxed text-gray-600 dark:text-gray-400 sm:table-cell">{item.examples}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <PricingTable
+            rows={CUSTOMIZE_ITEMS as unknown as { name: string; price: string; [key: string]: string }[]}
+            priceKey="price"
+            descKey="examples"
+          />
           <div className="mt-3 space-y-1">
             <p className="text-xs text-gray-400 dark:text-gray-500">
               ※ ベースツールの購入が別途必要（無料版対応可の場合あり）
@@ -311,71 +303,47 @@ export default function Pricing() {
           </div>
         </section>
 
-        {/* Options セクション */}
+        <SectionDivider delay="0.225s" />
+
+        {/* Options */}
         <section
-          className={`mb-16 ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-          style={isMounted ? { animationDelay: "0.8s" } : {}}
+          className={isMounted ? "animate-fade-in" : "opacity-0"}
+          style={isMounted ? { animationDelay: "0.25s" } : {}}
         >
-          <div className="mb-1 text-xs font-semibold uppercase tracking-widest text-pink-500 dark:text-pink-400">
-            Options
-          </div>
-          <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
+          <SectionLabel accent="bg-pink-400" label="Options" />
+          <h2 className="mb-5 text-base font-semibold text-gray-900 dark:text-white">
             オプション・カスタマイズ料金
           </h2>
-          <div className="overflow-hidden rounded-2xl border border-gray-200/50 bg-white/80 shadow-sm backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/80">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-gray-100 dark:border-gray-800">
-                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">項目</th>
-                  <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 whitespace-nowrap">参考価格</th>
-                  <th className="hidden px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 sm:table-cell">内容</th>
-                </tr>
-              </thead>
-              <tbody>
-                {OPTIONS_ITEMS.map((item, index) => (
-                  <tr
-                    key={item.name}
-                    className={index < OPTIONS_ITEMS.length - 1 ? "border-b border-gray-100 dark:border-gray-800" : ""}
-                  >
-                    <td className="px-5 py-4 align-top">
-                      <div className="font-semibold text-gray-900 dark:text-white">{item.name}</div>
-                      <div className="mt-1 text-xs leading-relaxed text-gray-500 dark:text-gray-400 sm:hidden">{item.description}</div>
-                    </td>
-                    <td className="px-5 py-4 align-top whitespace-nowrap font-bold text-pink-600 dark:text-pink-400">{item.price}</td>
-                    <td className="hidden px-5 py-4 align-top leading-relaxed text-gray-600 dark:text-gray-400 sm:table-cell">{item.description}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <PricingTable
+            rows={OPTIONS_ITEMS as unknown as { name: string; price: string; [key: string]: string }[]}
+            priceKey="price"
+            descKey="description"
+          />
         </section>
 
-        {/* Flow セクション */}
+        <SectionDivider delay="0.275s" />
+
+        {/* Flow */}
         <section
-          className={`mb-16 ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-          style={isMounted ? { animationDelay: "1.1s" } : {}}
+          className={isMounted ? "animate-fade-in" : "opacity-0"}
+          style={isMounted ? { animationDelay: "0.3s" } : {}}
         >
-          <div className="mb-1 text-xs font-semibold uppercase tracking-widest text-teal-500 dark:text-teal-400">
-            Flow
-          </div>
-          <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
+          <SectionLabel accent="bg-teal-400" label="Flow" />
+          <h2 className="mb-5 text-base font-semibold text-gray-900 dark:text-white">
             制作の流れ
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {FLOW_STEPS.map((step, index) => (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {FLOW_STEPS.map((step) => (
               <div
                 key={step.step}
-                className={`relative rounded-2xl border border-gray-200/50 bg-white/80 p-5 shadow-sm backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/80 ${
-                  isMounted ? "animate-item-entrance" : "opacity-0"
-                }`}
-                style={isMounted ? { animationDelay: `${1.15 + index * 0.05}s` } : {}}
+                className="rounded-xl border border-gray-100 p-5 dark:border-gray-800"
               >
-                <div className="mb-3 text-3xl font-black text-gray-100 dark:text-gray-800 select-none">
+                <p className="mb-2 text-2xl font-black text-gray-100 dark:text-gray-800">
                   {step.step}
-                </div>
-                <h3 className="mb-2 text-sm font-bold text-gray-900 dark:text-white">
+                </p>
+                <p className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
                   {step.title}
-                </h3>
+                </p>
                 <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
                   {step.description}
                 </p>
@@ -384,34 +352,33 @@ export default function Pricing() {
           </div>
         </section>
 
-        {/* Terms セクション */}
+        <SectionDivider delay="0.325s" />
+
+        {/* Terms */}
         <section
-          className={`mb-16 ${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-          style={isMounted ? { animationDelay: "1.3s" } : {}}
+          className={isMounted ? "animate-fade-in" : "opacity-0"}
+          style={isMounted ? { animationDelay: "0.35s" } : {}}
         >
-          <div className="mb-1 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
-            Terms
-          </div>
-          <h2 className="mb-6 text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
+          <SectionLabel accent="bg-gray-400" label="Terms" />
+          <h2 className="mb-5 text-base font-semibold text-gray-900 dark:text-white">
             注意事項・利用規約
           </h2>
-          <div className="overflow-hidden rounded-2xl border border-gray-200/50 bg-white/80 shadow-sm backdrop-blur-sm dark:border-gray-800/50 dark:bg-gray-900/80">
+          <div className="rounded-xl bg-gray-50 dark:bg-gray-900">
             {TERMS.map((term, index) => (
               <div
                 key={term.title}
-                className={`p-5 sm:p-6 ${
-                  index < TERMS.length - 1
-                    ? "border-b border-gray-100 dark:border-gray-800"
-                    : ""
-                }`}
+                className={`p-5 ${index < TERMS.length - 1 ? "border-b border-gray-100 dark:border-gray-800" : ""}`}
               >
-                <h3 className="mb-3 text-sm font-bold text-gray-800 dark:text-gray-200">
+                <h3 className="mb-3 text-xs font-semibold text-gray-700 dark:text-gray-300">
                   {term.title}
                 </h3>
                 <ul className="space-y-1.5">
                   {term.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm leading-relaxed text-gray-600 dark:text-gray-400">
-                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-gray-400 dark:bg-gray-600" />
+                    <li
+                      key={item}
+                      className="flex items-start gap-2 text-xs leading-relaxed text-gray-500 dark:text-gray-400"
+                    >
+                      <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-gray-300 dark:bg-gray-600" />
                       {item}
                     </li>
                   ))}
@@ -421,30 +388,32 @@ export default function Pricing() {
           </div>
         </section>
 
-        {/* お問い合わせ CTA */}
+        <SectionDivider delay="0.375s" />
+
+        {/* CTA */}
         <div
-          className={`${isMounted ? "animate-card-entrance" : "opacity-0"}`}
-          style={isMounted ? { animationDelay: "1.4s" } : {}}
+          className={`${isMounted ? "animate-fade-in" : "opacity-0"}`}
+          style={isMounted ? { animationDelay: "0.4s" } : {}}
         >
           <Link
             href="/contact"
-            className="group relative block overflow-hidden rounded-2xl border border-purple-200/50 bg-linear-to-br from-purple-50 via-pink-50 to-orange-50 p-6 shadow-sm transition-all duration-300 hover:scale-[1.01] hover:shadow-md dark:border-purple-800/50 dark:from-purple-950/30 dark:via-pink-950/30 dark:to-orange-950/30"
+            className="group block rounded-xl border border-gray-200 p-6 transition-all hover:border-purple-200 hover:bg-purple-50/50 dark:border-gray-800 dark:hover:border-purple-800/40 dark:hover:bg-purple-950/10"
           >
-            <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-linear-to-br from-purple-400/20 to-pink-400/20 blur-2xl opacity-50 transition-opacity duration-300 group-hover:opacity-70" />
-            <div className="relative">
-              <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
-                contact
-              </p>
-              <h2 className="mb-1 text-xl font-bold text-gray-900 dark:text-white">
-                ご依頼・ご相談はお気軽に
-              </h2>
-              <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
-                Discord・メール・X（Twitter）にてお問い合わせいただけます。
-              </p>
-              <div className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 transition-transform duration-200 group-hover:translate-x-1 dark:text-purple-400">
-                <span>連絡先を見る</span>
-                <span className="text-lg">→</span>
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
+                  contact
+                </p>
+                <p className="mt-2 text-base font-semibold text-gray-900 dark:text-white">
+                  ご依頼・ご相談はお気軽に
+                </p>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                  Discord・メール・X（Twitter）で受け付けています。
+                </p>
               </div>
+              <span className="mt-1 flex-shrink-0 text-gray-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-purple-400">
+                →
+              </span>
             </div>
           </Link>
         </div>
