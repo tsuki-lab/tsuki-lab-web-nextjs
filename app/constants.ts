@@ -23,6 +23,12 @@ export const LINKS = [
 
 export const PRODUCTS = [
   {
+    name: "初見さんが来るたびに時間が増えるカウントダウンタイマー",
+    href: `${BOOTH_BASE_URL}/items/8334877`,
+    description: "初見さんのコメントを自動検知してタイマーを延長できる、企画配信に活躍するカウントダウンタイマー（わんコメテンプレート）",
+    price: "¥580（無料版あり）",
+  },
+  {
     name: "Roupit（ルーピット）",
     href: `${BOOTH_BASE_URL}/items/7958002`,
     description: "配信特化のルーレットツール。OBSで表示用画面と操作画面を分けて、企画や盛り上げに利用可能（無料版あり）",
