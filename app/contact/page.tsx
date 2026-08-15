@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Header } from "../components/Header";
 import { Breadcrumb } from "../components/Breadcrumb";
@@ -178,35 +177,6 @@ export default function Contact() {
             </div>
           </div>
         </section>
-
-        <SectionDivider delay="0.35s" />
-
-        <div
-          className={`${isMounted ? "animate-fade-in" : "opacity-0"}`}
-          style={isMounted ? { animationDelay: "0.3s" } : {}}
-        >
-          <Link
-            href="/pricing"
-            className="group block rounded-xl border border-gray-200 p-6 transition-all hover:border-purple-200 hover:bg-purple-50/50 dark:border-gray-800 dark:hover:border-purple-800/40 dark:hover:bg-purple-950/10"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
-                  pricing
-                </p>
-                <p className="mt-2 text-base font-semibold text-gray-900 dark:text-white">
-                  制作料金ガイドを見る
-                </p>
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  制作メニュー・参考価格・オプション料金をご確認いただけます。
-                </p>
-              </div>
-              <span className="mt-1 flex-shrink-0 text-gray-400 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-purple-400">
-                →
-              </span>
-            </div>
-          </Link>
-        </div>
 
         <Footer />
       </main>
