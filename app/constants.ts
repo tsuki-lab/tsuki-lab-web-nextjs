@@ -23,16 +23,22 @@ export const LINKS = [
 
 export const PRODUCTS = [
   {
+    name: "Liscoresia（リスコレシア）",
+    href: `${BOOTH_BASE_URL}/items/6747525`,
+    description: "VTuber用エンドロール作成ツール（わんコメテンプレート）",
+    price: "¥860",
+  },
+  {
+    name: "歌詞と音源をワンクリックで流せるツール【歌枠にオススメ】",
+    href: `${BOOTH_BASE_URL}/items/8609652`,
+    description: "歌枠配信で音源と歌詞をワンクリックで再生・閲覧することができるツールです。 曲を登録しておけば、再生位置に合わせて歌詞が自動でスクロールします。",
+    price: "¥500",
+  },
+  {
     name: "初見さんが来るたびに時間が増えるカウントダウンタイマー",
     href: `${BOOTH_BASE_URL}/items/8334877`,
     description: "初見さんのコメントを自動検知してタイマーを延長できる、企画配信に活躍するカウントダウンタイマー（わんコメテンプレート）",
     price: "¥580（無料版あり）",
-  },
-  {
-    name: "Roupit（ルーピット）",
-    href: `${BOOTH_BASE_URL}/items/7958002`,
-    description: "配信特化のルーレットツール。OBSで表示用画面と操作画面を分けて、企画や盛り上げに利用可能（無料版あり）",
-    price: "¥1,000",
   },
   {
     name: "Totelo（トテロ）",
@@ -47,10 +53,16 @@ export const PRODUCTS = [
     price: "¥1,900",
   },
   {
-    name: "グラデーションカウンター",
-    href: `${BOOTH_BASE_URL}/items/7684868`,
-    description: "カウントをグラデーションで可愛く表示するカウンターツール",
-    price: "¥380",
+    name: "Roupit（ルーピット）",
+    href: `${BOOTH_BASE_URL}/items/7958002`,
+    description: "配信特化のルーレットツール。OBSで表示用画面と操作画面を分けて、企画や盛り上げに利用可能（無料版あり）",
+    price: "¥1,000",
+  },
+  {
+    name: "歌枠配信向けセットリスト表示ツール「Miques（ミキューズ）」",
+    href: `${BOOTH_BASE_URL}/items/8353274`,
+    description: "歌枠のセットリストをリアルタイムで OBS に表示する透過オーバーレイツールです。",
+    price: "¥860",
   },
   {
     name: "しんぷるカウンター",
@@ -59,15 +71,15 @@ export const PRODUCTS = [
     price: "¥280〜",
   },
   {
-    name: "Liscoresia（リスコレシア）",
-    href: `${BOOTH_BASE_URL}/items/6747525`,
-    description: "VTuber用エンドロール作成ツール（わんコメテンプレート）",
-    price: "¥860",
-  },
-  {
     name: "スーパーチャットビューア",
     href: `${BOOTH_BASE_URL}/items/6698509`,
     description: "スーパーチャットを画面に残せるツール",
     price: "¥500",
+  },
+  {
+    name: "グラデーションカウンター",
+    href: `${BOOTH_BASE_URL}/items/7684868`,
+    description: "カウントをグラデーションで可愛く表示するカウンターツール",
+    price: "¥380",
   },
 ] as const;
