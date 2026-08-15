@@ -5,8 +5,9 @@ import { getAllSlugs, getAllPosts, getPostSource } from "../../lib/blog";
 import { PRODUCTS } from "../../constants";
 import { PostClient } from "./PostClient";
 import { Callout } from "../../components/Callout";
+import { MdxImage } from "../../components/MdxImage";
 
-const mdxComponents = { Callout };
+const mdxComponents = { Callout, img: MdxImage };
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
