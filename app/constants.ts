@@ -83,3 +83,9 @@ export const PRODUCTS = [
     price: "¥380",
   },
 ] as const;
+
+/** productId(Booth item id) -> 提供元が用意している使い方専用ページ。
+ * ある場合はブログ記事ではなくこちらへ外部リンクする(別タブ)。 */
+export const EXTERNAL_GUIDES: Record<string, string> = {
+  "8353274": "https://miques.tsuki-lab.net/guide", // Miques（ミキューズ）
+};

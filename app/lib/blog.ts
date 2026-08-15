@@ -5,12 +5,19 @@ import readingTime from "reading-time";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
+export type QuizItem = {
+  question: string;
+  answer: string;
+  explanation?: string;
+};
+
 export type BlogFrontmatter = {
   title: string;
   description: string;
   publishedAt: string;
   relatedProductId?: string;
   tags?: string[];
+  quiz?: QuizItem[];
 };
 
 export type BlogPostMeta = BlogFrontmatter & {

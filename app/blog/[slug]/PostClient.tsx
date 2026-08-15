@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, ChevronDown } from "lucide-react";
 import { Header } from "../../components/Header";
 import { Breadcrumb } from "../../components/Breadcrumb";
 import { SectionDivider } from "../../components/SectionDivider";
 import { Footer } from "../../components/Footer";
-import type { BlogPostMeta } from "../../lib/blog";
+import type { BlogPostMeta, QuizItem } from "../../lib/blog";
 import type { PRODUCTS } from "../../constants";
 
 type Product = (typeof PRODUCTS)[number];
@@ -98,11 +98,58 @@ export function PostClient({
           <div className="prose prose-sm prose-gray max-w-none dark:prose-invert prose-headings:font-semibold prose-a:text-purple-600 dark:prose-a:text-purple-400">
             {children}
           </div>
+
+          {meta.quiz && meta.quiz.length > 0 && <QuizSection items={meta.quiz} />}
         </article>
 
         <SectionDivider delay="0.2s" />
         <Footer />
       </main>
+    </div>
+  );
+}
+
+function QuizSection({ items }: { items: QuizItem[] }) {
+  return (
+    <div className="mt-12">
+      <div className="mb-4 flex items-center gap-2">
+        <span className="h-1 w-1 rounded-full bg-purple-400" />
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-purple-500 dark:text-purple-400">
+          理解度チェック
+        </h2>
+      </div>
+      <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
+        読んだ内容をおさらいしてみましょう。タップすると答えが表示されます。
+      </p>
+      <div className="space-y-2">
+        {items.map((item, i) => (
+          <details
+            key={i}
+            className="group rounded-xl border border-gray-100 bg-gray-50/50 p-4 open:bg-purple-50/40 dark:border-gray-800 dark:bg-gray-900/40 dark:open:bg-purple-950/10"
+          >
+            <summary className="flex cursor-pointer list-none items-start justify-between gap-3 text-sm font-medium text-gray-900 marker:content-none dark:text-white">
+              <span className="flex gap-2">
+                <span className="flex-shrink-0 text-purple-400 dark:text-purple-500">Q{i + 1}.</span>
+                <span>{item.question}</span>
+              </span>
+              <ChevronDown
+                size={16}
+                className="mt-0.5 flex-shrink-0 text-gray-400 transition-transform group-open:rotate-180 dark:text-gray-500"
+              />
+            </summary>
+            <div className="mt-3 border-t border-gray-200 pt-3 dark:border-gray-800">
+              <p className="text-sm font-semibold text-purple-600 dark:text-purple-400">
+                A. {item.answer}
+              </p>
+              {item.explanation && (
+                <p className="mt-1.5 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                  {item.explanation}
+                </p>
+              )}
+            </div>
+          </details>
+        ))}
+      </div>
     </div>
   );
 }

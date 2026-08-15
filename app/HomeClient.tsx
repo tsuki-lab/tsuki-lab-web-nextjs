@@ -9,9 +9,9 @@ import { Footer } from "./components/Footer";
 import { PROFILE, CONTACT, LINKS, PRODUCTS } from "./constants";
 
 export function HomeClient({
-  relatedPostSlugs,
+  guideLinks,
 }: {
-  relatedPostSlugs: Record<string, string>;
+  guideLinks: Record<string, { href: string; external: boolean }>;
 }) {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -123,7 +123,7 @@ export function HomeClient({
           <div className="grid gap-3 sm:grid-cols-2">
             {PRODUCTS.map((product) => {
               const productId = product.href.split("/items/")[1];
-              const relatedSlug = relatedPostSlugs[productId];
+              const guide = guideLinks[productId];
               return (
                 <div
                   key={product.href}
@@ -147,14 +147,24 @@ export function HomeClient({
                     <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
                       {product.price}
                     </p>
-                    {relatedSlug && (
-                      <Link
-                        href={`/blog/${relatedSlug}`}
-                        className="text-xs font-medium text-purple-500 underline-offset-2 hover:underline dark:text-purple-400"
-                      >
-                        導入記事を読む
-                      </Link>
-                    )}
+                    {guide &&
+                      (guide.external ? (
+                        <a
+                          href={guide.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs font-medium text-purple-500 underline-offset-2 hover:underline dark:text-purple-400"
+                        >
+                          使い方を見る
+                        </a>
+                      ) : (
+                        <Link
+                          href={guide.href}
+                          className="text-xs font-medium text-purple-500 underline-offset-2 hover:underline dark:text-purple-400"
+                        >
+                          導入記事を読む
+                        </Link>
+                      ))}
                   </div>
                 </div>
               );
