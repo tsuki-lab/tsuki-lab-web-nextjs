@@ -6,6 +6,7 @@ import { ExternalLink } from "lucide-react";
 import { Header } from "../components/Header";
 import { Breadcrumb } from "../components/Breadcrumb";
 import { SectionDivider } from "../components/SectionDivider";
+import { Footer } from "../components/Footer";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://tsuki-lab.net";
 
@@ -206,6 +207,8 @@ export default function Contact() {
             </div>
           </Link>
         </div>
+
+        <Footer />
       </main>
     </div>
   );

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Header } from "./components/Header";
 import { SectionDivider } from "./components/SectionDivider";
+import { Footer } from "./components/Footer";
 import { PROFILE, CONTACT, LINKS, PRODUCTS } from "./constants";
 
 export default function Home() {
@@ -145,6 +146,8 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <Footer />
       </main>
     </div>
   );
