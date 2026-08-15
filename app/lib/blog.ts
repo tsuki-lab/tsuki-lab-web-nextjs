@@ -7,7 +7,8 @@ const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
 export type QuizItem = {
   question: string;
-  answer: string;
+  choices: string[];
+  correctIndex: number;
   explanation?: string;
 };
 

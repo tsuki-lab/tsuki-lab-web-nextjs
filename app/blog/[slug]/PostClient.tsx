@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type ReactNode } from "react";
-import { ExternalLink, ChevronDown } from "lucide-react";
+import { ExternalLink, ChevronDown, Check, X } from "lucide-react";
 import { Header } from "../../components/Header";
 import { Breadcrumb } from "../../components/Breadcrumb";
 import { SectionDivider } from "../../components/SectionDivider";
@@ -119,37 +119,88 @@ function QuizSection({ items }: { items: QuizItem[] }) {
         </h2>
       </div>
       <p className="mb-4 text-xs text-gray-500 dark:text-gray-400">
-        読んだ内容をおさらいしてみましょう。タップすると答えが表示されます。
+        読んだ内容をおさらいしてみましょう。選択肢から答えを選んでみてください。
       </p>
       <div className="space-y-2">
         {items.map((item, i) => (
-          <details
-            key={i}
-            className="group rounded-xl border border-gray-100 bg-gray-50/50 p-4 open:bg-purple-50/40 dark:border-gray-800 dark:bg-gray-900/40 dark:open:bg-purple-950/10"
-          >
-            <summary className="flex cursor-pointer list-none items-start justify-between gap-3 text-sm font-medium text-gray-900 marker:content-none dark:text-white">
-              <span className="flex gap-2">
-                <span className="flex-shrink-0 text-purple-400 dark:text-purple-500">Q{i + 1}.</span>
-                <span>{item.question}</span>
-              </span>
-              <ChevronDown
-                size={16}
-                className="mt-0.5 flex-shrink-0 text-gray-400 transition-transform group-open:rotate-180 dark:text-gray-500"
-              />
-            </summary>
-            <div className="mt-3 border-t border-gray-200 pt-3 dark:border-gray-800">
-              <p className="text-sm font-semibold text-purple-600 dark:text-purple-400">
-                A. {item.answer}
-              </p>
-              {item.explanation && (
-                <p className="mt-1.5 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
-                  {item.explanation}
-                </p>
-              )}
-            </div>
-          </details>
+          <QuizAccordion key={i} index={i} item={item} />
         ))}
       </div>
     </div>
+  );
+}
+
+function QuizAccordion({ index, item }: { index: number; item: QuizItem }) {
+  const [selected, setSelected] = useState<number | null>(null);
+
+  return (
+    <details className="group rounded-xl border border-gray-100 bg-gray-50/50 p-4 open:bg-purple-50/40 dark:border-gray-800 dark:bg-gray-900/40 dark:open:bg-purple-950/10">
+      <summary className="flex cursor-pointer list-none items-start justify-between gap-3 text-sm font-medium text-gray-900 marker:content-none dark:text-white">
+        <span className="flex gap-2">
+          <span className="flex-shrink-0 text-purple-400 dark:text-purple-500">Q{index + 1}.</span>
+          <span>{item.question}</span>
+        </span>
+        <ChevronDown
+          size={16}
+          className="mt-0.5 flex-shrink-0 text-gray-400 transition-transform group-open:rotate-180 dark:text-gray-500"
+        />
+      </summary>
+      <div className="mt-3 border-t border-gray-200 pt-3 dark:border-gray-800">
+        <div className="space-y-1.5">
+          {item.choices.map((choice, choiceIndex) => {
+            const isSelected = selected === choiceIndex;
+            const isCorrect = choiceIndex === item.correctIndex;
+            const showResult = selected !== null;
+
+            let stateClass =
+              "border-gray-200 hover:border-purple-200 hover:bg-white dark:border-gray-700 dark:hover:border-purple-800/60 dark:hover:bg-gray-900";
+            if (showResult && isCorrect) {
+              stateClass =
+                "border-purple-300 bg-purple-50 dark:border-purple-700 dark:bg-purple-950/30";
+            } else if (showResult && isSelected && !isCorrect) {
+              stateClass =
+                "border-red-200 bg-red-50 dark:border-red-900/50 dark:bg-red-950/20";
+            }
+
+            return (
+              <button
+                key={choiceIndex}
+                type="button"
+                disabled={showResult}
+                onClick={() => setSelected(choiceIndex)}
+                className={`flex w-full items-center justify-between gap-2 rounded-lg border px-3 py-2 text-left text-xs text-gray-700 transition-colors dark:text-gray-300 ${stateClass} ${showResult ? "cursor-default" : "cursor-pointer"}`}
+              >
+                <span>{choice}</span>
+                {showResult && isCorrect && (
+                  <Check size={14} className="flex-shrink-0 text-purple-500 dark:text-purple-400" />
+                )}
+                {showResult && isSelected && !isCorrect && (
+                  <X size={14} className="flex-shrink-0 text-red-400 dark:text-red-500" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {selected !== null && (
+          <div className="mt-3 border-t border-gray-200 pt-3 dark:border-gray-800">
+            <p
+              className={`text-sm font-semibold ${
+                selected === item.correctIndex
+                  ? "text-purple-600 dark:text-purple-400"
+                  : "text-gray-700 dark:text-gray-300"
+              }`}
+            >
+              {selected === item.correctIndex ? "正解！" : "不正解"} 正しい答え: {item.choices[item.correctIndex]}
+            </p>
+            {item.explanation && (
+              <p className="mt-1.5 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                {item.explanation}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    </details>
   );
 }
