@@ -1,0 +1,320 @@
+---
+title: "Toteloの独自テンプレートを作る方法（外部開発者向けAPIガイド）"
+description: "配信カウンター「Totelo」は、本体（プラグイン）とOBS表示用テンプレートが分離された設計です。HTTP APIの仕様、formSchemaの定義方法、配布パッケージの形式まで、独自テンプレートを開発・公開する手順をコード付きで解説します。"
+publishedAt: "2026-08-16"
+relatedProductId: "7888902"
+isSetupGuide: false
+tags: ["わんコメ", "開発者向け", "カウンター"]
+quiz:
+  - question: "Toteloのテンプレート開発で、表示ロジックはどちら側が持つ？"
+    choices:
+      - "テンプレート側がすべて持つ"
+      - "Totelo本体（プラグイン）側が持つ"
+      - "わんコメ本体が持つ"
+    correctIndex: 0
+    explanation: "Totelo本体はコメント数・同接・投げ銭などの「集計」だけを行い、HTTP API経由で生データを渡します。何をどう表示するかはテンプレート側が自由に決めます。"
+  - question: "テンプレート専用の設定フォーム（formSchema）をコントローラーに出すには？"
+    choices:
+      - "マウント時にregisterTemplateConfigをPOSTする"
+      - "コントローラー側のソースコードを直接編集する"
+      - "わんコメの管理画面から手動でフォームを作成する"
+    correctIndex: 0
+    explanation: "registerTemplateConfigをPOSTすると、その内容がsnapshot.templateConfigsに登録され、コントローラーがformSchemaの定義通りにフォームUIを自動生成します。コントローラー側のコード変更は不要です。"
+  - question: "config.jsonのようなテンプレート設定データはどう読み込むべき？"
+    choices:
+      - "ビルド時にコードへバンドル（import）する"
+      - "ページ読み込み時にfetchで取得する"
+      - "OBSの設定画面から都度アップロードする"
+    correctIndex: 0
+    explanation: "file://直開きやOBSのローカルファイル読み込みでは相対パスへのfetchが失敗することがあるため、設定データはコードに直接バンドルする実装が推奨されています。"
+  - question: "Aggregatesのviewerフィールドが表す値は？"
+    choices:
+      - "現在の同接（配信中の視聴者数）"
+      - "配信中の最大同接"
+      - "累計の視聴者数"
+    correctIndex: 0
+    explanation: "AggregatesのviewerとmaxViewerは名前がややこしく、viewer=現在同接、maxViewer=最大同接です（CounterBlockの命名とは逆転しているので注意が必要です）。"
+---
+
+Toteloは、複数のカウンターを自由に組み合わせて自分だけの計算式を作れる配信カウンターです。標準では「default」テンプレートなど数種類の見た目が同梱されていますが、実はこのテンプレート部分、**外部の開発者が独自に作って公開できる**仕組みになっています。
+
+この記事では、「自分だけのTotelo表示テンプレートを作ってOBSで使いたい」「作ったテンプレートをBoothなどで配布したい」という開発者さん向けに、Toteloが公開しているHTTP APIの仕様と、実装〜配布までの流れをコード付きで解説します。
+
+## Toteloでできること（テンプレート開発の観点から）
+
+- Totelo本体（プラグイン）が集計したデータを、HTTP API経由で自由な言語・フレームワークから取得できる
+- 独自の設定フォーム（色・文字サイズ・レイアウトなど）をコード側で定義するだけで、配信者向けの操作画面（コントローラー）に自動反映できる
+- 完成したテンプレートは、わんコメの「カスタムテンプレート」機構にそのままドラッグ＆ドロップで配布・導入できる
+
+## 本体とテンプレートの関係について
+
+<Callout type="info" title="使うのは「集計データ」だけ">
+Totelo本体はコメント数・同接・投げ銭などの**集計だけ**を担当します。何を・どう表示するかはテンプレート側が全て自由に決められます。React・Vue・素のJavaScript、どれで作ってもかまいません。要件は「最終的に静的なHTML/CSS/JS一式として動くこと」だけです。
+</Callout>
+
+```
+[Totelo本体（わんコメ上で動作）] --- HTTP API ---> [あなたのテンプレート（OBSブラウザソース）]
+   コメント/同接/投げ銭などを集計          GET: 集計データ・パターン設定を取得
+   パターン設定・手動カウントを保存        POST: 自分の設定スキーマを登録 など
+```
+
+配信者は別途「コントローラー」という設定画面で、カウンターの組み合わせ（**パターン**、最大6個）を作ります。テンプレートは、その時点で選択されているパターンの内容に従って表示するだけです。
+
+## ① APIのエンドポイント
+
+```
+http://localhost:11180/api/plugins/dev.tsuki-lab.totelo-counter
+```
+
+`11180`はTotelo本体が動作する「わんコメ」内蔵HTTPサーバーの固定ポート、`dev.tsuki-lab.totelo-counter`はTotelo Counterプラグイン固有のIDです。テンプレートがわんコメと同一オリジンで配信されている場合は相対パス`/api/plugins/dev.tsuki-lab.totelo-counter`でも届きますが、`file://`で直接開く場合など同一オリジンと言えない状況では上記の絶対URLを使ってください。
+
+## ② GET：集計データを取得する
+
+```js
+const res = await fetch(ENDPOINT);
+const json = await res.json();
+const snapshot = json.response ?? json; // { response: {...} } でラップされている場合があるため両対応にする
+```
+
+返ってくる`snapshot`の形は次の通りです。
+
+```ts
+interface PluginSnapshot {
+  rev: number; // 変化検知用トークン。値が変わっていなければ再描画・再計算をスキップしてよい
+  metrics: Aggregates; // 生の集計値
+  liveInfo: {
+    liveId: string | null;
+    liveStreamUrl: string | null;
+    liveStreamTitle: string | null;
+    isLive: boolean;
+  };
+  patterns: Pattern[]; // 配信者が作ったパターン（最大6個）
+  currentPatternId: string | null; // 現在選択中のパターン
+  manualCounts: Record<string, Record<string, number>>; // patternId → blockId → 手動カウント値
+  templateConfigs: Record<string, TemplateConfig>; // 各テンプレートが登録した設定スキーマ
+}
+```
+
+<Callout type="tip" title="ポーリングし続けるのがおすすめ">
+一度fetchして終わりではなく、一定間隔でポーリングし続けてください。`rev`が変わっていない間は再計算・再描画をスキップすると軽くなります。
+</Callout>
+
+## ③ POST：自分の設定スキーマを登録する
+
+テンプレート開発で使う書き込みは基本的にこれ1つだけです。マウント時（ページ読み込み時）に一度呼び出してください。
+
+```js
+await fetch(ENDPOINT, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    action: "registerTemplateConfig",
+    config: {
+      id: "your-template-id",
+      name: "表示名",
+      formSchema: [/* 次の章を参照 */],
+    },
+  }),
+});
+```
+
+`registerTemplateConfig`はこのテンプレート自身の`id`に対して`config`を丸ごと上書きします（差分更新ではありません）。これをPOSTするだけで、コントローラー側のソースコードを一切書かずに、配信者向けの設定フォームが自動生成されます。
+
+## ④ formSchemaで設定フォームを自己定義する
+
+配信者側のコントローラーに、あなたのテンプレート専用の設定フォーム（色・文字サイズ・レイアウトなど）を自動生成させるための仕組みです。
+
+```js
+const TEMPLATE_ID = "your-template-id";
+
+const TEMPLATE_CONFIG = {
+  id: TEMPLATE_ID,
+  name: "テンプレート名（コントローラーに表示される名前）",
+  formSchema: [
+    {
+      key: "accentColor",
+      label: "アクセント色",
+      type: "color",
+      default: "#22d3ee",
+      group: "表示",
+      subgroup: "色",
+    },
+    {
+      key: "titleFontSize",
+      label: "タイトル文字サイズ",
+      type: "number",
+      default: 48,
+      min: 8,
+      max: 200,
+      step: 1,
+      group: "表示",
+    },
+    {
+      key: "layout",
+      label: "レイアウト",
+      type: "select",
+      default: "column",
+      options: [
+        { label: "縦", value: "column" },
+        { label: "横", value: "row" },
+      ],
+      group: "表示",
+    },
+  ],
+};
+```
+
+`formSchema`の各項目で使えるフィールドは次の通りです。
+
+- **key** — 一意なキー。テンプレート側で値を読み出すのに使う
+- **label** — コントローラーに表示される項目名
+- **type** — `text` / `number` / `color` / `select` / `checkbox` / `range` / `hidden`
+- **default** — 既定値（string / number / boolean）
+- **options** — selectタイプ用の`{ label, value }[]`
+- **min / max / step** — numberやrange用
+- **group / subgroup** — コントローラー上のタブ見出しと小見出し（未指定は「その他」）
+- **columns** — `2`を指定すると隣接項目と2列グリッドで並ぶ
+
+<Callout type="warning" title="config.jsonはfetchせず、コードに直接埋め込む">
+この`TEMPLATE_CONFIG`オブジェクトはコード内に直接書いてください。実行時に別ファイルの`config.json`を`fetch`で取得する実装は避けましょう。OBSのローカルファイル読み込みや`file://`直開きでは、相対パスへの`fetch`がブラウザ側の制約で失敗するケースがあります。ビルド時に`import`でバンドルしてしまうのが確実です。
+</Callout>
+
+配信者が保存した値は`snapshot.patterns[].templateSettings["your-template-id"]`に入っています。キーが存在しない場合は`formSchema`の`default`で補ってください。
+
+```js
+function resolveTemplateValues(formSchema, saved) {
+  const resolved = {};
+  for (const field of formSchema) {
+    const v = saved[field.key];
+    resolved[field.key] = v === undefined ? field.default : v;
+  }
+  return resolved;
+}
+
+const values = resolveTemplateValues(
+  TEMPLATE_CONFIG.formSchema,
+  pattern.templateSettings?.[TEMPLATE_ID] ?? {}
+);
+```
+
+## ⑤ 表示するパターンを決める
+
+配信者は最大6個のパターンを作れます。どれを表示するかは次の優先順位で決めてください。
+
+```js
+const url = new URL(location.href);
+const pinned = url.searchParams.get("p"); // ?p=<patternId> で特定パターンに固定表示できる
+
+const pattern =
+  snapshot.patterns.find((p) => p.id === (pinned ?? snapshot.currentPatternId)) ??
+  snapshot.patterns[0] ??
+  null;
+```
+
+## ⑥ 集計値を計算する
+
+`snapshot.metrics`（`Aggregates`）に生の集計値が入っています。
+
+```ts
+interface Aggregates {
+  firstTime: number; // 初見さん
+  commentListener: number; // 初コメ
+  commentTotal: number; // コメント総数
+  superChat: number; // スパチャ・スパステ金額（¥、YouTube専用）
+  gift: number; // メンバーシップギフト数（YouTube専用）
+  upVote: number; // 高評価
+  maxViewer: number; // 最大同接
+  viewer: number; // 現在同接
+}
+```
+
+<Callout type="warning" title="最大同接／現在同接の名前交差に要注意">
+`Aggregates`の`viewer`は「現在同接」、`maxViewer`が「最大同接」です。しかし配信者が組むカウンターブロック（`CounterBlock.type`）側は`viewer`＝現在同接、`maxViewer`＝最大同接と対応関係が一致しているものの、実装によってはここを取り違えやすいポイントです。取り違えても実行時エラーは出ず、**表示される数値が黙って入れ替わるだけ**なので、テストするときは意図的に同接数を変化させて正しい方の数値が動くか確認するのが確実です。
+</Callout>
+
+各ブロックの値と合計値は次のように計算します（`manual`タイプは自動集計を使わず`manualCounts`をそのまま参照します）。
+
+```js
+function getCounterValue(block, metrics, manualCounts) {
+  if (block.type === "manual") {
+    return manualCounts[block.id] || 0;
+  }
+  const off = block.manualOffset || 0;
+  const base = {
+    firstTime: metrics.firstTime,
+    commentListener: metrics.commentListener,
+    commentTotal: metrics.commentTotal,
+    upVote: metrics.upVote,
+    maxViewer: metrics.maxViewer,
+    viewer: metrics.viewer,
+    superChat: metrics.superChat,
+    gift: metrics.gift,
+  }[block.type];
+  return (base ?? 0) + off;
+}
+
+function calculateTotal(blocks, metrics, manualCounts) {
+  const sum = blocks
+    .filter((b) => b.visible)
+    .reduce((acc, b) => acc + getCounterValue(b, metrics, manualCounts) * b.coefficient, 0);
+  return Math.floor(sum);
+}
+```
+
+表示・非表示や合計欄の出し分けは、パターンの`showResult` / `resultTitle` / `resultUnit`をできるだけ尊重すると、配信者が期待する体験と揃います。
+
+## ⑦ 配布パッケージの形式
+
+以下の3ファイルを1つのフォルダにまとめてzip化すると、わんコメの「カスタムテンプレート」画面にドラッグ＆ドロップするだけで導入できます。展開やフォルダ移動は不要です。
+
+```
+your-template.zip
+├── index.html          # 表示本体（このテンプレートの全て）
+├── template.json        # わんコメのテンプレート manifest
+└── thumb.png             # テンプレート管理画面に表示されるサムネイル
+```
+
+`template.json`はこの形式です。
+
+```json
+{
+  "name": "テンプレート名",
+  "version": "1.0.0",
+  "author": "あなたの名前",
+  "description": "v1.0.0"
+}
+```
+
+zipは単体で配布されるものなので、ユーザー向けの「導入方法.txt」を同梱しておくと親切です。「Totelo本体が導入済みであることの確認」「zipをカスタムテンプレートにドラッグ＆ドロップ」「OBSのブラウザソースへ追加」の3ステップを案内する内容にすると、既存のTotelo公式テンプレートと同じ体験になります。
+
+## よくあるトラブル
+
+- **コントローラーに設定フォームが出てこない** → テンプレートを一度も開いていないケースがほとんどです。`registerTemplateConfig`はページ読み込み時に実行されるため、一度開いてから確認してください。
+- **OBSで真っ白になる／読み込みに失敗する** → `config.json`相当のデータを外部ファイルとして`fetch`していないか確認してください。コードに直接埋め込む形に変更すると解決します。
+- **最大同接と現在同接が逆に表示される** → `CounterBlock.type`と`Aggregates`フィールドの対応（⑥参照）を取り違えています。
+- **手動カウンター（manual）が反映されない** → `manualCounts[patternId][blockId]`を参照しておらず、自動集計側のロジックを通してしまっているケースです。
+
+## 公開・配布にあたってのルール
+
+Totelo Counter向けのテンプレートは、tsuki-lab（hanetsuki）に断りなく自由に制作・公開して構いません。ただし、Totelo本体の名前・仕組みを利用させてもらう以上、最低限のルールとして次の点は守ってください。
+
+- **本体（プラグイン本体・plugin.js・コントローラーUIなど）そのものの再配布・転売・同梱配布は禁止**です。テンプレートの配布zipには、上記の3ファイル（＋任意で導入方法.txt）だけを同梱してください。
+- **自作テンプレートは自分の著作物として自由に公開・配布できます**（Boothでの有償販売も可）。販売価格や再配布可否などのライセンス形態は制作者自身で決められます。
+- 公開する際は、**Totelo公式のテンプレートではなく個人が制作した非公式テンプレートであること**が利用者に伝わるようにしてください。「Totelo公式」「tsuki-lab制作」など誤認させる表記は避けます。
+- 配布ページ・説明文には、必ず「Totelo Counter向けのテンプレートであること」「本体の入手先リンク」「制作者（hanetsuki / tsuki-lab）へのクレジット」を明記してください。例えば次のような一文で構いません。
+
+```
+本テンプレートは「Totelo Counter」（© hanetsuki / tsuki-lab）向けの
+非公式テンプレートです。利用には Totelo Counter 本体が別途必要です。
+https://booth.pm/ja/items/7888902
+```
+
+<Callout type="info" title="APIは予告なく変更される可能性があります">
+本記事に記載のAPI・データ構造（エンドポイント、formSchema、Aggregates / CounterBlockの形など）は、Totelo本体のアップデートに伴い予告なく変更される可能性があります。tsuki-labは個々のテンプレートの動作・品質を保証しないため、不具合対応・サポートは制作者自身の責任で行ってください。法人利用・大規模配布など個別の相談がある場合は、事前にtsuki-lab（hanetsuki）まで問い合わせてください。
+</Callout>
+
+## まとめ
+
+Toteloのテンプレートは「集計データを渡すAPI」と「表示を作るテンプレート」がきれいに分離された設計になっているので、既存の同梱テンプレートで物足りなくなったら、好きな言語・フレームワークで自分だけの見た目を作って配布できます。①GETでスナップショット取得 → ②POSTでformSchema登録 → ③パターン・集計値から表示を組み立てる → ④zipで配布、の流れを押さえれば、コントローラー側のコードは一切触らずに独自テンプレートを公開できます。
+
+まずはTotelo本体の基本的な使い方を知りたい場合は、「[Totelo（トテロ）の導入ガイド](/blog/totelo-setup-guide)」もあわせてどうぞ。
