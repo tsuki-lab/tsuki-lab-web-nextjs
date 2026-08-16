@@ -7,30 +7,41 @@ interface BreadcrumbProps {
 export function Breadcrumb({ items }: BreadcrumbProps) {
   return (
     <nav className="mb-8" aria-label="パンくずリスト">
-      <ol className="flex items-center gap-2 text-sm">
-        {items.map((item, index) => (
-          <li key={index} className="flex items-center gap-2">
-            {index > 0 && (
-              <span className="text-gray-400 dark:text-gray-600" aria-hidden="true">
-                /
-              </span>
-            )}
-            {item.href ? (
-              <Link
-                href={item.href}
-                className="text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
-              >
-                {item.label}
-              </Link>
-            ) : (
-              <span className="font-medium text-gray-900 dark:text-gray-100" aria-current="page">
-                {item.label}
-              </span>
-            )}
-          </li>
-        ))}
+      <ol className="flex min-w-0 items-center gap-2 text-sm">
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
+          return (
+            <li
+              key={index}
+              className={`flex min-w-0 items-center gap-2 ${isLast ? "flex-1" : "flex-shrink-0"}`}
+            >
+              {index > 0 && (
+                <span className="flex-shrink-0 text-gray-400 dark:text-gray-600" aria-hidden="true">
+                  /
+                </span>
+              )}
+              {item.href ? (
+                <Link
+                  href={item.href}
+                  className="flex-shrink-0 text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <span
+                  className="min-w-0 truncate font-medium text-gray-900 dark:text-gray-100"
+                  aria-current="page"
+                  title={item.label}
+                >
+                  {item.label}
+                </span>
+              )}
+            </li>
+          );
+        })}
       </ol>
     </nav>
   );
 }
+
 
