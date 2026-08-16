@@ -1,5 +1,5 @@
 import { PRODUCTS, EXTERNAL_GUIDES } from "./constants";
-import { getPostsByProductId } from "./lib/blog";
+import { getSetupGuidePost } from "./lib/blog";
 import { HomeClient } from "./HomeClient";
 
 export default function Home() {
@@ -10,9 +10,9 @@ export default function Home() {
       guideLinks[productId] = { href: EXTERNAL_GUIDES[productId], external: true };
       continue;
     }
-    const posts = getPostsByProductId(productId);
-    if (posts.length > 0) {
-      guideLinks[productId] = { href: `/blog/${posts[0].slug}`, external: false };
+    const post = getSetupGuidePost(productId);
+    if (post) {
+      guideLinks[productId] = { href: `/blog/${post.slug}`, external: false };
     }
   }
 
