@@ -4,6 +4,10 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { getAllSlugs, getAllPosts, getPostSource } from "../../lib/blog";
 import { PRODUCTS } from "../../constants";
 import { PostClient } from "./PostClient";
+import { Callout } from "../../components/Callout";
+import { MdxImage } from "../../components/MdxImage";
+
+const mdxComponents = { Callout, img: MdxImage };
 
 export async function generateStaticParams() {
   return getAllSlugs().map((slug) => ({ slug }));
@@ -41,7 +45,7 @@ export default async function BlogPostPage({
 
   return (
     <PostClient meta={meta} relatedProduct={relatedProduct}>
-      <MDXRemote source={source.content} />
+      <MDXRemote source={source.content} components={mdxComponents} />
     </PostClient>
   );
 }
