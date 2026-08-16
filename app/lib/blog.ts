@@ -28,12 +28,20 @@ export type BlogFrontmatter = {
 export type BlogPostMeta = BlogFrontmatter & {
   slug: string;
   readingMinutes: number;
+  /** OGP/構造化データ用に本文冒頭から抽出した最初の画像パス（なければ undefined） */
+  ogImage?: string;
 };
 
 function getSlugs(): string[] {
   return readdirSync(BLOG_DIR)
     .filter((file) => file.endsWith(".mdx"))
     .map((file) => file.replace(/\.mdx$/, ""));
+}
+
+/** MDX本文中の最初の画像URL（Markdown記法）を抽出する */
+function extractFirstImage(content: string): string | undefined {
+  const match = content.match(/!\[[^\]]*\]\(([^)\s]+)\)/);
+  return match?.[1];
 }
 
 /** 全記事のメタ情報を公開日降順で返す */
@@ -46,6 +54,7 @@ export function getAllPosts(): BlogPostMeta[] {
       ...frontmatter,
       slug,
       readingMinutes: Math.max(1, Math.ceil(readingTime(content).minutes)),
+      ogImage: extractFirstImage(content),
     };
   });
 
@@ -57,11 +66,13 @@ export function getAllSlugs(): string[] {
 }
 
 /** 単一記事のフロントマターとMDX本文(未コンパイル)を返す */
-export function getPostSource(slug: string): { frontmatter: BlogFrontmatter; content: string } | null {
+export function getPostSource(
+  slug: string
+): { frontmatter: BlogFrontmatter; content: string; ogImage?: string } | null {
   try {
     const raw = readFileSync(path.join(BLOG_DIR, `${slug}.mdx`), "utf-8");
     const { data, content } = matter(raw);
-    return { frontmatter: data as BlogFrontmatter, content };
+    return { frontmatter: data as BlogFrontmatter, content, ogImage: extractFirstImage(content) };
   } catch {
     return null;
   }
