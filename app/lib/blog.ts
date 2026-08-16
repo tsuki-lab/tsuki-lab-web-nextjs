@@ -17,6 +17,10 @@ export type BlogFrontmatter = {
   description: string;
   publishedAt: string;
   relatedProductId?: string;
+  /** 商品一覧の「導入記事を読む」リンクに採用されるか。
+   *  テンプレ専用など「本体の導入そのもの」ではない記事は false を明示する。
+   *  省略時は true（導入記事）として扱う。 */
+  isSetupGuide?: boolean;
   tags?: string[];
   quiz?: QuizItem[];
 };
@@ -66,4 +70,14 @@ export function getPostSource(slug: string): { frontmatter: BlogFrontmatter; con
 /** relatedProductId から紐づく記事一覧を返す (products側からの逆引き用) */
 export function getPostsByProductId(productId: string): BlogPostMeta[] {
   return getAllPosts().filter((p) => p.relatedProductId === productId);
+}
+
+/** 商品一覧の「導入記事を読む」リンク用に、本体の導入記事を1件選ぶ。
+ *  テンプレ専用記事（isSetupGuide: false）は導入記事から除外し、
+ *  本体の導入そのものを扱う記事を優先する。該当がなければ従来通り最初の1件。 */
+export function getSetupGuidePost(productId: string): BlogPostMeta | undefined {
+  const posts = getPostsByProductId(productId);
+  if (posts.length === 0) return undefined;
+  const setupGuide = posts.find((p) => p.isSetupGuide !== false);
+  return setupGuide ?? posts[0];
 }
